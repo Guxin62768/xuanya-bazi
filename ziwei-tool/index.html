@@ -35,6 +35,7 @@
   <a href="#healthPanel" class="nav-link">健康</a>
   <a href="#flowerPanel" class="nav-link">桃花貴人</a>
   <a href="#hehunPanel" class="nav-link">合婚</a>
+  <a href="#wugePanel" class="nav-link">五格</a>
   <a href="#daxianPanel" class="nav-link">大限</a>
   <a href="#liunianPanel" class="nav-link">流年</a>
   <a href="#libraryPanel" class="nav-link">斷語庫</a>
@@ -276,6 +277,18 @@
       <button id="hehunBtn" class="calc-btn auto-ly" type="button">合婚</button>
     </div>
     <div id="hehunResult" class="fort-content" style="margin-top:14px"></div>
+  </section>
+
+  <section class="panel wuge-panel" id="wugePanel" style="display:none">
+    <h2 class="panel-title">起名五格</h2>
+    <p class="sf-desc">姓名學五格剖象：輸入姓氏與名字的筆畫數，測數理吉凶</p>
+    <div class="solar-grid">
+      <label class="field"><span>姓（筆畫）</span><input id="wgSurname" type="number" min="1" max="20" value="4"></label>
+      <label class="field"><span>名首字</span><input id="wgM1" type="number" min="1" max="20" value="8"></label>
+      <label class="field"><span>名次字</span><input id="wgM2" type="number" min="0" max="20" value="6"></label>
+      <button id="wugeBtn" class="calc-btn auto-ly" type="button">測五格</button>
+    </div>
+    <div id="wugeResult" class="fort-content" style="margin-top:14px"></div>
   </section>
 
   <section class="panel daxian-panel" id="daxianPanel" style="display:none">
