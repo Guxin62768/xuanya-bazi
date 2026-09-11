@@ -987,11 +987,33 @@ function renderLucky(yearGan, yearZhi){
 
 // 風水方位
 const ZHI_FANGWEI={子:'正北',丑:'東北',寅:'東北',卯:'正東',辰:'東南',巳:'東南',午:'正南',未:'西南',申:'西南',酉:'正西',戌:'西北',亥:'西北'};
+// 八宅本命卦
+function calcMingGua(year, gender){
+  const GUA={1:'坎',2:'坤',3:'震',4:'巽',5:'中',6:'乾',7:'兑',8:'艮',9:'离'};
+  const y2=year%100;
+  let r = year<=1999 ? (gender==='男'?(100-y2)%9:(y2-4)%9) : (gender==='男'?(99-y2)%9:((y2-4)+9)%9);
+  if(r===0) r=9;
+  if(r===5) return gender==='男'?'坤':'艮';
+  return GUA[r];
+}
 function renderFengshui(order, aux){
   const panel=document.getElementById('fengshuiPanel');
   const box=document.getElementById('fengshuiContent');
   panel.style.display='';
   const H=[];
+  // 本命卦（八宅派）
+  const birth=window.__birth;
+  if(birth){
+    const mg=calcMingGua(birth.sy, birth.sg);
+    const GUA_WX={坎:'水',坤:'土',震:'木',巽:'木',乾:'金',兑:'金',艮:'土',离:'火'};
+    H.push('<div class="ft-item"><div class="ft-head">本命卦（八宅風水）</div><div class="ft-body">');
+    H.push('<div class="ft-line"><span class="ft-key">本命卦</span>'+mg+'卦（屬'+GUA_WX[mg]+'）</div>');
+    // 东四命/西四命
+    const east=['坎','震','巽','离'], west=['乾','坤','艮','兑'];
+    const grp = east.includes(mg)?'東四命':'西四命';
+    H.push('<div class="ft-line"><span class="ft-key">命屬</span>'+grp+'，宜住'+grp+'宅</div>');
+    H.push('</div></div>');
+  }
   H.push('<div class="ft-item"><div class="ft-head">文昌位（書房·學業）</div><div class="ft-body">');
   // 文昌星落宮
   let wenchangZhi=null;
