@@ -206,6 +206,14 @@ body{
 .sf-stars{font-size:13px;color:var(--text-main);line-height:1.7}
 @media(max-width:640px){.sanfang-grid{grid-template-columns:repeat(2,1fr)}}
 
+/* ----- fort/name/lucky ----- */
+.fort-content{display:flex;flex-direction:column;gap:12px}
+.ft-item{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:12px 14px}
+.ft-head{font-size:14px;color:var(--gold);letter-spacing:2px;margin-bottom:8px;padding-left:10px;border-left:3px solid var(--jade)}
+.ft-body{display:flex;flex-direction:column;gap:6px}
+.ft-line{font-size:13px;color:var(--text-main);line-height:1.7}
+.ft-key{display:inline-block;color:var(--gold-l);font-weight:700;margin-right:6px}
+
 /* ----- records ----- */
 .records-list{display:flex;flex-direction:column;gap:10px}
 .rec-item{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:12px 14px;flex-wrap:wrap}
