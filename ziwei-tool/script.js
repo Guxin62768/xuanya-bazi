@@ -245,7 +245,13 @@ function solarToAll(sy, sm, sd, sh){
   const gzMap=palaceGanZhi(yearGan);
   const mingGZ=gzMap[ms.mingZhi];
   const wj=wuxingJu(mingGZ);
-  return {yearGan, yearZhi, month, day, hour:sh, ju:wj.ju, juNum:wj.juNum, juName:wj.juName, naYin:wj.naYin, mingZhi:ms.mingZhi, mingGZ};
+  const bazi=[
+    {t:'年柱', gz:lun.getYearInGanZhi(), extra:'生肖'+lun.getYearShengXiao()},
+    {t:'月柱', gz:lun.getMonthInGanZhi()},
+    {t:'日柱', gz:lun.getDayInGanZhi()},
+    {t:'時柱', gz:lun.getTimeInGanZhi()}
+  ];
+  return {yearGan, yearZhi, month, day, hour:sh, ju:wj.ju, juNum:wj.juNum, juName:wj.juName, naYin:wj.naYin, mingZhi:ms.mingZhi, mingGZ, bazi};
 }
 function applySolar(){
   const sy=parseInt(document.getElementById('sy').value,10);
@@ -261,12 +267,16 @@ function applySolar(){
   document.getElementById('month').value=r.month;
   document.getElementById('day').value=r.day;
   document.getElementById('hour').value=r.hour;
-  // 五行局：單字(火)+中文數(六) -> 下拉值
+  // 五行局：單字(火)+中文數(六) -> 下拉值(如 火六)
   const CN=['零','一','二','三','四','五','六'];
   if(r.ju && r.juNum){
-    const juVal=r.ju+CN[r.juNum]+'局';
-    document.getElementById('ju').value=juVal;
+    const juVal=r.ju+CN[r.juNum];
+    if([...document.getElementById('ju').options].some(o=>o.value===juVal)){
+      document.getElementById('ju').value=juVal;
+    }
   }
+  // 存八字供渲染
+  window.__bazi=r.bazi||null;
   render();
 }
 
@@ -297,6 +307,14 @@ function render(){
   document.getElementById('chartPanel').style.display='';
   document.getElementById('infoPanel').style.display='';
   document.getElementById('daxianPanel').style.display='';
+  // 八字四柱
+  const bzPanel=document.getElementById('baziPanel');
+  if(window.__bazi){
+    bzPanel.style.display='';
+    document.getElementById('baziGrid').innerHTML=window.__bazi.map((b,i)=>`<div class="bz-item"><span class="bz-t">${b.t}</span><span class="bz-gz">${b.gz}</span><span class="bz-extra">${b.extra||''}</span></div>`).join('');
+  } else {
+    bzPanel.style.display='none';
+  }
   const tianLabel='紫微在'+zz;
   document.getElementById('tianLabel').textContent=tianLabel;
   document.getElementById('ziweiLabel').textContent='紫微 '+zz;
@@ -545,7 +563,7 @@ function autoLiunian(){
 }
 document.getElementById('autoLyBtn').addEventListener('click', autoLiunian);
 // 初始排一張
-window.addEventListener('DOMContentLoaded', render);
+window.addEventListener('DOMContentLoaded', () => { applySolar(); });
 
 // 導出命盤圖片（原生 Canvas 重繪，不依賴外部庫）
 function exportChart(){
