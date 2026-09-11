@@ -172,10 +172,11 @@ body{
 .shensha-block{margin-top:16px;grid-column:1/-1}
 .shensha-title{font-size:14px;color:var(--gold);letter-spacing:2px;margin-bottom:12px}
 .shensha-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
-.ss-item{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:7px;padding:8px 12px}
+.ss-item{display:flex;flex-direction:column;gap:3px;background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:7px;padding:8px 12px}
 .ss-item.ss-ly{border-color:var(--gold);background:rgba(201,164,88,.12)}
 .ss-name{font-size:14px;color:var(--gold-l);letter-spacing:1px}
 .ss-zhi{font-size:12px;color:var(--muted)}
+.ss-desc{font-size:11px;color:var(--muted);line-height:1.5;margin-top:2px}
 .daxian-desc{color:var(--gold);font-size:14px;letter-spacing:2px;margin-bottom:14px}
 .daxian-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
 .dx-item{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.3);border:1px solid var(--line);border-left:3px solid var(--cinnabar);border-radius:8px;padding:10px 14px}
