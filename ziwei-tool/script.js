@@ -258,6 +258,9 @@ function applySolar(){
   const sm=parseInt(document.getElementById('sm').value,10);
   const sd=parseInt(document.getElementById('sd').value,10);
   const sh=parseInt(document.getElementById('sh').value,10);
+  // 同步性別
+  const sg=document.getElementById('sg').value;
+  document.getElementById('gender').value=sg;
   if(!sy||!sm||!sd){ alert('請填完整公曆生日'); return; }
   const r=solarToAll(sy,sm,sd,sh);
   if(!r) return;
@@ -277,6 +280,8 @@ function applySolar(){
   }
   // 存八字供渲染
   window.__bazi=r.bazi||null;
+  // 存出生信息
+  window.__birth={sy,sm,sd,sg};
   render();
 }
 
@@ -307,6 +312,10 @@ function render(){
   document.getElementById('chartPanel').style.display='';
   document.getElementById('infoPanel').style.display='';
   document.getElementById('daxianPanel').style.display='';
+  // 出生信息
+  if(window.__birth){
+    document.getElementById('birthInfo').textContent=window.__birth.sy+'年'+window.__birth.sm+'月'+window.__birth.sd+'日 · '+window.__birth.sg+'命';
+  }
   // 八字四柱
   const bzPanel=document.getElementById('baziPanel');
   if(window.__bazi){
