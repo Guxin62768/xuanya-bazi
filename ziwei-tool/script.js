@@ -210,6 +210,12 @@ const STAR_KEY={
   '廉貞':'主權變', '天府':'主守成', '太陰':'主田宅', '貪狼':'主才藝', '巨門':'主口舌',
   '天相':'主協調', '天梁':'主庇蔭', '七殺':'主開創', '破軍':'主變動'
 };
+const SI_HUA_DESC={
+  '祿':'當年生旺、緣分增進，易得助力或順遂',
+  '權':'當年主導性增強，利於掌權、擔責、推進',
+  '科':'當年名聲彰顯，利於文名、聲望、貴人提攜',
+  '忌':'當年需多留意，防其對應領域的困擾或執著'
+};
 
 /* ---------- 渲染 ---------- */
 function render(){
@@ -258,9 +264,11 @@ function render(){
   const age=parseInt(document.getElementById('age').value,10)||1;
   const ln=calcLiunian(lyGan, lyZhi, ms.mingZhi, gender, age);
   const lySihuaStr='祿'+ln.lySihua.祿+' 權'+ln.lySihua.權+' 科'+ln.lySihua.科+' 忌'+ln.lySihua.忌;
+  const sihuaGloss=Object.entries(ln.lySihua).map(([k,star])=>`${star}${k}：${SI_HUA_DESC[k]||''}`).join('；');
   document.getElementById('liunianResult').innerHTML=
     `<div class="ln-item"><span class="ln-label">流年太歲</span><span class="ln-val">${lyGan}${lyZhi}年 · ${ln.lyName}（${lyZhi}宮）</span></div>`+
     `<div class="ln-item"><span class="ln-label">流年四化</span><span class="ln-val">${lySihuaStr}</span></div>`+
+    `<div class="ln-item ln-gloss"><span class="ln-label">四化斷語</span><span class="ln-val">${sihuaGloss}</span></div>`+
     `<div class="ln-item"><span class="ln-label">小限</span><span class="ln-val">${age}歲 → ${ln.xName}（${ln.xZhi}宮）</span></div>`;
   // 記錄高亮宮位（供渲染用）
   window.__hlLy=lyZhi;
