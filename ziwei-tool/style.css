@@ -159,6 +159,17 @@ body{
 .sf-gz{font-size:13px;color:var(--gold-l);margin:6px 0}
 .sf-stars{font-size:13px;color:var(--paper);line-height:1.7}
 @media(max-width:640px){.sanfang-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ----- shier ----- */
+.shier-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.shier-item{background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:9px;padding:12px 14px;border-left:3px solid var(--cinnabar)}
+.shier-item.shier-ming{border-left-color:var(--gold);background:rgba(201,164,88,.06)}
+.shier-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.shier-name{font-size:15px;color:var(--gold);letter-spacing:2px;font-weight:700}
+.shier-zhi{font-size:12px;color:var(--muted)}
+.shier-theme{font-size:12px;color:var(--gold-l);letter-spacing:1px;margin-bottom:4px}
+.shier-gz{font-size:12px;color:var(--muted);margin-bottom:6px}
+.shier-desc{font-size:12px;color:var(--paper);line-height:1.6}
 .liunian-form{align-items:end}
 .liunian-result{grid-column:1/-1;display:flex;flex-direction:column;gap:10px;margin-top:6px}
 .ln-item{display:flex;align-items:center;gap:12px;background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
