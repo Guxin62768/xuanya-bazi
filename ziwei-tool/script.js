@@ -259,6 +259,29 @@ function render(){
     });
   }
 
+  // 流年重點宮位提示（浩哥方案3）
+  (function(){
+    const lyPalace=order.find(o=>o.zhi===lyZhi);
+    if(!lyPalace) return;
+    const parts=[];
+    lyPalace.stars.forEach(s=>{
+      let t=s;
+      if(window.__lySihuaMark && window.__lySihuaMark[s]) t+='（流'+window.__lySihuaMark[s]+'）';
+      if(sihuaMark[s]) t+='（'+sihuaMark[s]+'）';
+      parts.push(t);
+    });
+    lyPalace.aux.forEach(s=>{
+      let t=s;
+      if(window.__lySihuaMark && window.__lySihuaMark[s]) t+='（流'+window.__lySihuaMark[s]+'）';
+      parts.push(t);
+    });
+    const starStr=parts.length?parts.join('、'):'（無主星）';
+    const el=document.createElement('div');
+    el.className='ln-item ln-focus';
+    el.innerHTML=`<span class="ln-label">流年重點</span><span class="ln-val">${lyGan}${lyZhi}年命主看<em>${lyPalace.name}（${lyPalace.zhi}宮）</em>：${starStr}</span>`;
+    document.getElementById('liunianResult').appendChild(el);
+  })();
+
   // 網格渲染（標準紫微盤方位）
   const gridMap={}; // idx -> [gridRow, gridCol]
   const P=[
