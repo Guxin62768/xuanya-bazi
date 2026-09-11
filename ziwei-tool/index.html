@@ -24,6 +24,29 @@
   <!-- 輸入區 -->
   <section class="panel input-panel">
     <h2 class="panel-title">排盤輸入</h2>
+    <div class="solar-box">
+      <div class="solar-label">公曆生日（自動轉農曆）</div>
+      <div class="solar-grid">
+        <label class="field"><span>年</span><input id="sy" type="number" min="1900" max="2100" value="1968"></label>
+        <label class="field"><span>月</span><input id="sm" type="number" min="1" max="12" value="5"></label>
+        <label class="field"><span>日</span><input id="sd" type="number" min="1" max="31" value="28"></label>
+        <label class="field"><span>時</span>
+          <select id="sh">
+            <option value="0">子時 23-01</option><option value="1">丑時 01-03</option>
+            <option value="2">寅時 03-05</option><option value="3">卯時 05-07</option>
+            <option value="4">辰時 07-09</option><option value="5">巳時 09-11</option>
+            <option value="6">午時 11-13</option><option value="7">未時 13-15</option>
+            <option value="8">申時 15-17</option><option value="9">酉時 17-19</option>
+            <option value="10">戌時 19-21</option><option value="11" selected>亥時 21-23</option>
+          </select>
+        </label>
+        <button id="solarBtn" class="calc-btn auto-ly" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4M16 2v4M3 9h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+          <span>公曆轉農曆排盤</span>
+        </button>
+      </div>
+    </div>
+    <h2 class="panel-title sub">或手動填（自動推算或手選）</h2>
     <div class="form-grid">
       <label class="field">
         <span>年干</span>
@@ -177,6 +200,7 @@
   <p>文化娛樂參考 · 命理排盤由玄曜引擎計算</p>
 </footer>
 
+<script src="libs/lunar.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
