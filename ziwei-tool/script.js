@@ -283,7 +283,12 @@ function applySolar(){
   // 存八字供渲染
   window.__bazi=r.bazi||null;
   // 存出生信息
-  window.__birth={sy,sm,sd,sg};
+  window.__birth={sy,sm,sd,sg,sh};
+  // URL 存參數（分享用）
+  if(history.replaceState){
+    const qs='?sy='+sy+'&sm='+sm+'&sd='+sd+'&sh='+sh+'&sg='+encodeURIComponent(sg);
+    history.replaceState(null,'',qs);
+  }
   render();
 }
 
@@ -562,6 +567,26 @@ function render(){
 
 document.getElementById('calcBtn').addEventListener('click', render);
 document.getElementById('solarBtn').addEventListener('click', applySolar);
+
+// 排盤示例
+const DEMO={
+  boss:{sy:1968, sm:5, sd:28, sh:11, sg:'男'},
+  son:{sy:1995, sm:10, sd:21, sh:9, sg:'男'},
+  s4:{sy:2003, sm:12, sd:31, sh:5, sg:'女'},
+  s7:{sy:2010, sm:4, sd:22, sh:2, sg:'男'},
+  s6:{sy:1958, sm:11, sd:20, sh:10, sg:'男'}
+};
+document.getElementById('demoBtn').addEventListener('click', ()=>{
+  const k=document.getElementById('demoSel').value;
+  if(!k||!DEMO[k]){ alert('請選擇一個示例'); return; }
+  const d=DEMO[k];
+  document.getElementById('sy').value=d.sy;
+  document.getElementById('sm').value=d.sm;
+  document.getElementById('sd').value=d.sd;
+  document.getElementById('sh').value=d.sh;
+  document.getElementById('sg').value=d.sg;
+  applySolar();
+});
 // 自動推流年：出生年干支 + 虛歲 → 流年干支
 function autoLiunian(){
   const bGan=document.getElementById('yearGan').value;
@@ -576,7 +601,18 @@ function autoLiunian(){
 }
 document.getElementById('autoLyBtn').addEventListener('click', autoLiunian);
 // 初始排一張
-window.addEventListener('DOMContentLoaded', () => { applySolar(); });
+window.addEventListener('DOMContentLoaded', () => {
+  // 讀取 URL 分享參數，若有則填入
+  const p=new URLSearchParams(location.search);
+  if(p.get('sy') && p.get('sm') && p.get('sd')){
+    document.getElementById('sy').value=p.get('sy');
+    document.getElementById('sm').value=p.get('sm');
+    document.getElementById('sd').value=p.get('sd');
+    if(p.get('sh')) document.getElementById('sh').value=p.get('sh');
+    if(p.get('sg')) document.getElementById('sg').value=decodeURIComponent(p.get('sg'));
+  }
+  applySolar();
+});
 
 // 導出命盤圖片（原生 Canvas 重繪，不依賴外部庫）
 function exportChart(){
@@ -696,6 +732,72 @@ function fallbackCopy(txt){
 }
 document.getElementById('copyBtn').addEventListener('click', copyResult);
 
+// 分享鏈接：複製帶參數的完整 URL
+function shareLink(){
+  const url=location.origin+location.pathname+location.search;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(()=>alert('已複製分享鏈接！\n'+url)).catch(()=>fallbackCopy(url));
+  } else fallbackCopy(url);
+}
+document.getElementById('shareBtn').addEventListener('click', shareLink);
+
+// 命盤記錄（localStorage）
+const REC_KEY='ziwei_records';
+function getRecords(){ try{ return JSON.parse(localStorage.getItem(REC_KEY)||'[]'); }catch(e){ return []; } }
+function saveRecords(list){ localStorage.setItem(REC_KEY, JSON.stringify(list)); }
+function renderRecords(){
+  const list=getRecords();
+  const panel=document.getElementById('recordsPanel');
+  const box=document.getElementById('recordsList');
+  if(list.length===0){ panel.style.display='none'; box.innerHTML=''; return; }
+  panel.style.display='';
+  box.innerHTML=list.map((r,i)=>`<div class="rec-item"><div class="rec-info"><span class="rec-name">${r.name}</span><span class="rec-meta">${r.birth} · ${r.gender}命</span><span class="rec-bazi">${r.bazi}</span></div><div class="rec-actions"><button class="rec-load" data-i="${i}">載入</button><button class="rec-del" data-i="${i}">刪</button></div></div>`).join('');
+  box.querySelectorAll('.rec-load').forEach(b=>b.addEventListener('click',()=>loadRecord(parseInt(b.dataset.i))));
+  box.querySelectorAll('.rec-del').forEach(b=>b.addEventListener('click',()=>delRecord(parseInt(b.dataset.i))));
+}
+document.getElementById('saveBtn').addEventListener('click', ()=>{
+  const birth=window.__birth;
+  const bazi=window.__bazi;
+  if(!birth){ alert('請先排盤'); return; }
+  const name=prompt('為這個命盤取名：（留空用出生日期）', birth.sy+'-'+birth.sm+'-'+birth.sd);
+  let list=getRecords();
+  list.push({name:name||birth.sy+'-'+birth.sm+'-'+birth.sd, birth:birth.sy+'年'+birth.sm+'月'+birth.sd+'日', gender:birth.sg, bazi:(bazi?bazi.map(b=>b.gz).join(' '):''), sy:birth.sy, sm:birth.sm, sd:birth.sd, sh:window.__birth.sh, sg:birth.sg});
+  saveRecords(list);
+  renderRecords();
+  alert('已保存命盤！');
+});
+function loadRecord(i){
+  const list=getRecords();
+  const r=list[i]; if(!r) return;
+  document.getElementById('sy').value=r.sy;
+  document.getElementById('sm').value=r.sm;
+  document.getElementById('sd').value=r.sd;
+  document.getElementById('sh').value=r.sh;
+  document.getElementById('sg').value=r.sg;
+  window.scrollTo({top:0, behavior:'smooth'});
+  applySolar();
+}
+function delRecord(i){
+  let list=getRecords(); list.splice(i,1); saveRecords(list); renderRecords();
+}
+renderRecords();
+
+// 斷語庫渲染
+function initLibrary(){
+  const libPanel=document.getElementById('libraryPanel');
+  if(!libPanel) return;
+  libPanel.style.display='';
+  // 星曜
+  document.getElementById('libStars').innerHTML=Object.entries(STAR_DESC).map(([s,d])=>`<div class="lib-item"><span class="lib-k">${s}</span><span class="lib-v">${d}</span></div>`).join('');
+  // 宮位
+  document.getElementById('libPalaces').innerHTML=Object.entries(PALACE_THEME).map(([s,d])=>`<div class="lib-item"><span class="lib-k">${s}</span><span class="lib-v">${d}</span></div>`).join('');
+  // 四化
+  document.getElementById('libSihua').innerHTML=Object.entries(SI_HUA_DESC).map(([s,d])=>`<div class="lib-item"><span class="lib-k">${s}</span><span class="lib-v">${d}</span></div>`).join('');
+  // 神煞
+  document.getElementById('libShensha').innerHTML=Object.entries(SS_DESC).map(([s,d])=>`<div class="lib-item"><span class="lib-k">${s}</span><span class="lib-v">${d}</span></div>`).join('');
+}
+initLibrary();
+
 // 主題切換
 function applyTheme(t){
   document.body.classList.toggle('light', t==='light');
@@ -708,5 +810,31 @@ document.getElementById('themeBtn').addEventListener('click', ()=>{
 // 載入已存主題
 const saved=localStorage.getItem('ziwei_theme');
 if(saved==='light') applyTheme('light');
+
+// 移動端摺疊面板：將每個 panel 標題後內容包進 .panel-body，點標題切換
+function initCollapse(){
+  if(window.innerWidth>640) return;
+  document.querySelectorAll('section.panel').forEach(panel=>{
+    if(panel.querySelector('.panel-body')) return; // 已處理
+    const title=panel.querySelector('.panel-title');
+    if(!title) return;
+    const body=document.createElement('div');
+    body.className='panel-body';
+    // 移動標題後的所有兄弟節點進 body
+    let node=title.nextSibling;
+    while(node){
+      const next=node.nextSibling;
+      body.appendChild(node);
+      node=next;
+    }
+    panel.appendChild(body);
+    // 命盤 + 輸入 panel 預設展開，其餘摺疊
+    if(panel.id!=='chartPanel' && !panel.classList.contains('input-panel')) panel.classList.add('collapsed');
+    title.addEventListener('click', ()=>panel.classList.toggle('collapsed'));
+  });
+}
+initCollapse();
+let _lastMobile=window.innerWidth<=640;
+window.addEventListener('resize', ()=>{ const m=window.innerWidth<=640; if(m!==_lastMobile){ _lastMobile=m; location.reload(); } });
 
 })();
