@@ -247,8 +247,6 @@ function render(){
   const tianLabel='紫微在'+zz;
   document.getElementById('tianLabel').textContent=tianLabel;
   document.getElementById('ziweiLabel').textContent='紫微 '+zz;
-  document.getElementById('centerGanZhi').textContent=mingGZ;
-  document.querySelector('.center-name').textContent=(wj.juName||'')+'·命盤';
 
   // 大限
   const dx=calcDaxian(yearGan, gender, ms.mingZhi, ju);
@@ -351,8 +349,18 @@ function render(){
 
   for(let r=0;r<4;r++){
     for(let c=0;c<4;c++){
+      // 中間 2x2 放中心宮（grid item，天然不遮宮格）
+      if(r>=1 && r<=2 && c>=1 && c<=2){
+        if(r===1 && c===1){
+          const cs=document.createElement('div');
+          cs.className='center-square';
+          cs.innerHTML=`<div class="center-gz">${mingGZ}</div><div class="center-name">${(wj.juName||'')}·命盤</div>`;
+          chart.appendChild(cs);
+        }
+        continue;
+      }
       const cell=cells[r][c];
-      if(!cell){ continue; } // 中間十字留空
+      if(!cell){ continue; }
       const o=cell.o;
       const div=document.createElement('div');
       let cls='palace'+(o.isMing?' ming':'')+(o.isShen?' shen':'');
@@ -394,6 +402,9 @@ function render(){
         </div>
         <div class="pal-stars">${starsHtml}</div>
       `;
+      // 精確定位到 4x4 網格
+      div.style.gridRow=(r+1)+' / '+(r+2);
+      div.style.gridColumn=(c+1)+' / '+(c+2);
       chart.appendChild(div);
     }
   }
