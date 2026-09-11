@@ -489,6 +489,17 @@ function render(){
   }).join('');
   document.getElementById('sanfangGrid').innerHTML=sfHtml;
 
+  // 十二宮逐宮斷語
+  document.getElementById('shierPanel').style.display='';
+  const shierHtml=order.map((p,i)=>{
+    const theme=PALACE_THEME[PALACE_NAMES[i]]||'';
+    const zhu=p.stars.filter(s=>STAR_DESC[s]);
+    const zhuStr=zhu.length?zhu.map(s=>s+(sihuaMark[s]?'('+sihuaMark[s]+')':'')+'·'+STAR_DESC[s]).join('；'):'（空宮）';
+    const mark=(p.isMing?'·命':'')+(p.isShen?'·身':'');
+    return `<div class="shier-item${p.isMing?' shier-ming':''}"><div class="shier-head"><span class="shier-name">${PALACE_NAMES[i]}${mark}</span><span class="shier-zhi">${p.zhi}宮</span></div><div class="shier-theme">${theme}</div><div class="shier-gz">${p.gz}</div><div class="shier-desc">${zhuStr}</div></div>`;
+  }).join('');
+  document.getElementById('shierGrid').innerHTML=shierHtml;
+
   // 命宮主星斷語
   const mingPalace=order[0];
   const mingStars=mingPalace.stars.filter(s=>STAR_DESC[s]);
