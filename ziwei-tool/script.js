@@ -590,10 +590,12 @@ function render(){
   renderHealth(order, sihuaMark);
   renderFlower(yearZhi, aux, gzMap);
   renderLuopan(order, aux, ms.mingZhi);
+  renderYuncheng(yearZhi);
   document.getElementById('hehunPanel').style.display='';
   document.getElementById('wugePanel').style.display='';
   document.getElementById('haoPanel').style.display='';
   document.getElementById('luopanPanel').style.display='';
+  document.getElementById('yunchengPanel').style.display='';
 
   // 命宮主星斷語
   const mingPalace=order[0];
@@ -1296,6 +1298,33 @@ function renderLuopan(order, aux, mingZhi){
   // 圖例
   const lg=document.getElementById('luopanLegend');
   lg.innerHTML=marks.map(m=>`<span class="lg"><i style="background:${m.color}"></i>${m.name}${m.zhi}宮</span>`).join('');
+}
+
+// 生肖運程
+const SHENGXIAO=['鼠','牛','虎','兔','龍','蛇','馬','羊','猴','雞','狗','豬'];
+function renderYuncheng(yearZhi){
+  const panel=document.getElementById('yunchengPanel');
+  const box=document.getElementById('yunchengContent');
+  panel.style.display='';
+  // 流年支（用流年選擇）
+  const lyZhi=document.getElementById('lyZhi')?document.getElementById('lyZhi').value:'午';
+  const H=[];
+  H.push('<div class="ft-item"><div class="ft-head">流年 '+lyZhi+' 年 · 十二生肖運勢</div><div class="ft-body">');
+  // 生肖与流年地支关系
+  const liu={子:'鼠',丑:'牛',寅:'虎',卯:'兔',辰:'龍',巳:'蛇',午:'馬',未:'羊',申:'猴',酉:'雞',戌:'狗',亥:'豬'};
+  for(const z of ZHI){
+    const sx=liu[z];
+    // 关系判断
+    let rel='平', relDesc='運勢平穩，宜順其自然';
+    if(z===lyZhi){ rel='值太歲'; relDesc='本命年值太歲，運勢多變，宜沉穩行事、防口舌是非'; }
+    else if(({子:'午',丑:'未',寅:'申',卯:'酉',辰:'戌',巳:'亥',午:'子',未:'丑',申:'寅',酉:'卯',戌:'辰',亥:'巳'})[z]===lyZhi){ rel='沖太歲'; relDesc='沖太歲，運勢動盪，宜防變動、謹慎理財'; }
+    else if(({子:'辰',丑:'巳',寅:'午',卯:'未',辰:'子',巳:'丑',午:'寅',未:'卯',申:'戌',酉:'亥',戌:'申',亥:'酉'})[z]===lyZhi){ rel='破太歲'; relDesc='破太歲，宜防破財、是非，守成為上'; }
+    else if(({子:'申',丑:'酉',寅:'戌',卯:'亥',辰:'子',巳:'丑',午:'寅',未:'卯',申:'辰',酉:'巳',戌:'午',亥:'未'})[z]===lyZhi){ rel='合太歲'; relDesc='合太歲，運勢和順，利人際合作'; }
+    const mark=(z===yearZhi)?'（本命）':'';
+    H.push('<div class="ft-line"><span class="ft-key">'+sx+'年'+mark+'</span>'+rel+'：'+relDesc+'</div>');
+  }
+  H.push('</div></div>');
+  box.innerHTML=H.join('');
 }
 
 // 斷語庫渲染
