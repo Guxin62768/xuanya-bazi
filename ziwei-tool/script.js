@@ -590,6 +590,7 @@ function render(){
   renderHealth(order, sihuaMark);
   renderFlower(yearZhi, aux, gzMap);
   document.getElementById('hehunPanel').style.display='';
+  document.getElementById('wugePanel').style.display='';
 
   // 命宮主星斷語
   const mingPalace=order[0];
@@ -1148,6 +1149,47 @@ function renderHehun(){
   box.innerHTML=H.join('');
 }
 document.getElementById('hehunBtn').addEventListener('click', renderHehun);
+
+// 起名五格
+// 81數理吉凶（簡表）
+const JIXIONG=['大吉','吉','半吉','凶','大凶','吉帶凶'];
+function numJixiong(n){
+  // 簡化：依尾數定吉凶（1/3/5/6/7/8/11/13/15/16...吉）
+  const ji=[1,3,5,6,7,8,11,13,15,16,17,18,21,23,24,25,29,31,32,33,35,37,39,41,45,47,48,52,57,61,63,65,67,68,81];
+  const xiong=[2,4,9,10,12,14,19,20,22,26,27,28,30,34,36,38,40,42,43,44,46,49,50,51,53,54,56,58,60,62,64,66,69,70,72,73,74,75,76,77,78,79,80];
+  if(ji.includes(n)) return '吉';
+  if(xiong.includes(n)) return '凶';
+  return '半吉';
+}
+function renderWuge(){
+  const panel=document.getElementById('wugePanel');
+  const box=document.getElementById('wugeResult');
+  panel.style.display='';
+  const s=parseInt(document.getElementById('wgSurname').value,10)||0;
+  const m1=parseInt(document.getElementById('wgM1').value,10)||0;
+  const m2=parseInt(document.getElementById('wgM2').value,10)||0;
+  if(!s||!m1){ box.innerHTML='<div class="ft-item"><div class="ft-body">請填姓與名首字筆畫</div></div>'; return; }
+  const tian=s+1;                       // 天格
+  const ren=s+m1;                       // 人格
+  const di=m1+(m2||1);                  // 地格（單名=+1）
+  const zong=s+m1+m2;                   // 總格
+  const wai=zong-ren+1;                 // 外格
+  const H=[];
+  const mk=(name,val,desc)=>`<div class="ft-line"><span class="ft-key">${name}</span>${val}（${numJixiong(val)}）　${desc}</div>`;
+  H.push('<div class="ft-item"><div class="ft-head">五格數理</div><div class="ft-body">');
+  H.push(mk('天格',tian,'祖上遺產、長輩助力'));
+  H.push(mk('人格',ren,'主運，一生核心運勢'));
+  H.push(mk('地格',di,'前運，早年與家庭'));
+  H.push(mk('總格',zong,'總運，中晚年'));
+  H.push(mk('外格',wai,'副運，人際貴人'));
+  H.push('</div></div>');
+  // 補五行建議（結合命盤）
+  H.push('<div class="ft-item"><div class="ft-head">取名補五行</div><div class="ft-body">');
+  H.push('<div class="ft-line">參考上方「取名建議」之八字五行，缺何補何</div>');
+  H.push('</div></div>');
+  box.innerHTML=H.join('');
+}
+document.getElementById('wugeBtn').addEventListener('click', renderWuge);
 
 // 斷語庫渲染
 function initLibrary(){
