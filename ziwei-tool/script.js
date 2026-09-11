@@ -741,6 +741,63 @@ function shareLink(){
 }
 document.getElementById('shareBtn').addEventListener('click', shareLink);
 
+// 導出完整命理報告（.txt）
+function exportReport(){
+  const d=window.__chartData;
+  if(!d) return;
+  const birth=window.__birth;
+  const bazi=window.__bazi;
+  const L=[];
+  const hr='\n'+'─'.repeat(30)+'\n';
+  L.push('【玄曜紫微斗數 · 完整命理報告】');
+  L.push('生成時間：'+new Date().toLocaleString('zh-TW'));
+  if(birth) L.push('出生：'+birth.sy+'年'+birth.sm+'月'+birth.sd+'日 · '+birth.sg+'命');
+  if(bazi) L.push('八字四柱：'+bazi.map(b=>b.t+' '+b.gz).join('　'));
+  L.push(hr);
+  L.push('【命盤總覽】');
+  L.push('命宮：'+d.mingGZ+'（'+d.mingZhi+'宮）　身宮：'+d.shenZhi+'宮');
+  L.push('五行局：'+d.wj.juName+'　紫微在'+d.zz+'宮　天府在'+d.tf+'宮');
+  L.push('命主：'+(MINGZHU[d.yearZhi]||'')+'　身主：'+(SHENZHU[d.yearZhi]||''));
+  L.push('四化：祿'+d.sihua.祿+' 權'+d.sihua.權+' 科'+d.sihua.科+' 忌'+d.sihua.忌);
+  L.push(hr);
+  L.push('【三方四正】');
+  [0,4,6,8].forEach(i=>{
+    const p=d.order[i];
+    const stars=[...p.stars.map(s=>s+(d.sihuaMark&&d.sihuaMark[s]?'('+d.sihuaMark[s]+')':'')),...p.aux];
+    L.push(PALACE_NAMES[i]+'（'+p.zhi+'宮·'+p.gz+'）：'+(stars.length?stars.join('、'):'空宮'));
+  });
+  L.push(hr);
+  L.push('【十二宮評析】');
+  d.order.forEach((p,i)=>{
+    const theme=PALACE_THEME[PALACE_NAMES[i]]||'';
+    const zhu=p.stars.filter(s=>STAR_DESC[s]);
+    const zhuStr=zhu.length?zhu.map(s=>s+'·'+STAR_DESC[s]).join('；'):'（空宮）';
+    L.push(PALACE_NAMES[i]+'（'+p.zhi+'宮·'+p.gz+'）'+theme+'　'+zhuStr);
+  });
+  L.push(hr);
+  L.push('【大限】'+(d.daxian?'（'+(d.daxian.shun?'順行':'逆行')+'·'+d.daxian.start+'歲起）':''));
+  if(d.daxian) d.daxian.res.forEach(l=>L.push(l.startAge+'歲 '+l.name+'·'+l.zhi+'（'+l.startAge+'-'+l.startAge+9+'歲）'));
+  L.push(hr);
+  L.push('【流年 · 小限】');
+  const lyGan=document.getElementById('lyGan').value, lyZhi=document.getElementById('lyZhi').value;
+  const age=parseInt(document.getElementById('age').value,10)||1;
+  const ln=calcLiunian(lyGan, lyZhi, d.mingZhi, document.getElementById('gender').value, age);
+  L.push('流年太歲：'+lyGan+lyZhi+'年 · '+ln.lyName+'（'+lyZhi+'宮）');
+  L.push('流年四化：祿'+ln.lySihua.祿+' 權'+ln.lySihua.權+' 科'+ln.lySihua.科+' 忌'+ln.lySihua.忌);
+  L.push('小限：'+age+'歲 → '+ln.xName+'（'+ln.xZhi+'宮）');
+  L.push('十二神煞：'+ln.shensha.map(s=>s.shen+'('+s.zhi+')').join('、'));
+  L.push(hr);
+  L.push('※ 本報告為文化娛樂參考，命理斷語僅供參考，不構成任何建議。');
+  const txt=L.join('\n');
+  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='ziwei-report-'+d.yearGan+d.zz+'.txt';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+document.getElementById('reportBtn').addEventListener('click', exportReport);
+
 // 命盤記錄（localStorage）
 const REC_KEY='ziwei_records';
 function getRecords(){ try{ return JSON.parse(localStorage.getItem(REC_KEY)||'[]'); }catch(e){ return []; } }
