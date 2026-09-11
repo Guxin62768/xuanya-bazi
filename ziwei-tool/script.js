@@ -172,6 +172,45 @@ function calcLiunian(lyGan, lyZhi, mingZhi, gender, age){
   return {lyPalace, lyName, lySihua, xZhi:xZhiRaw, xName, xIndex:xIdx};
 }
 
+/* 13. 命宮主星斷語（通用中性，文化參考） */
+const STAR_DESC={
+  '紫微':'帝座之星，主貴氣與領導力，格局高者具統御之才',
+  '天機':'智慧之星，主思辨與機變，善謀略而多動',
+  '太陽':'光明之星，主名聲與付出，熱忱坦蕩',
+  '武曲':'財星，主剛毅與執行，行事果斷務實',
+  '天同':'福星，主安逸與隨和，性溫厚知足',
+  '廉貞':'次桃花星，主才藝與權變，性烈而有主見',
+  '天府':'庫星，主穩重與積蓄，善守成而寬厚',
+  '太陰':'田宅主，主內斂與細膩，性溫柔善感',
+  '貪狼':'桃花星，主才藝與慾望，交際廣而多變',
+  '巨門':'暗星，主口才與是非，善言辭而多思',
+  '天相':'印星，主輔佐與協調，性溫和守規',
+  '天梁':'蔭星，主清高與庇護，性正直而老成',
+  '七殺':'將星，主威嚴與開創，性剛烈而果決',
+  '破軍':'耗星，主變動與開拓，性衝動而敢為'
+};
+
+/* 14. 十二宮主題（流年宮位斷語用） */
+const PALACE_THEME={
+  '命宮':'一生格局與性格之樞紐',
+  '兄弟':'手足緣分與平輩助力',
+  '夫妻':'婚姻感情與配偶關係',
+  '子女':'子嗣緣分與晚輩',
+  '財帛':'財祿進出與理財方式',
+  '疾厄':'健康體質與潛在隱憂',
+  '遷移':'外出際遇與環境變動',
+  '交友':'人際往來與合作夥伴',
+  '官祿':'事業發展與社會地位',
+  '田宅':'房產積蓄與家庭根基',
+  '福德':'精神享受與福分根基',
+  '父母':'長上緣分與早年環境'
+};
+const STAR_KEY={
+  '紫微':'主貴', '天機':'主智', '太陽':'主名', '武曲':'主財', '天同':'主福',
+  '廉貞':'主權變', '天府':'主守成', '太陰':'主田宅', '貪狼':'主才藝', '巨門':'主口舌',
+  '天相':'主協調', '天梁':'主庇蔭', '七殺':'主開創', '破軍':'主變動'
+};
+
 /* ---------- 渲染 ---------- */
 function render(){
   const yearGan=document.getElementById('yearGan').value;
@@ -276,9 +315,15 @@ function render(){
       parts.push(t);
     });
     const starStr=parts.length?parts.join('、'):'（無主星）';
+    // 宮位主題 + 主星特質斷語
+    const theme=PALACE_THEME[lyPalace.name]||'';
+    const mainStarTrait=lyPalace.stars.map(s=>STAR_KEY[s]).filter(Boolean);
+    const traitStr=mainStarTrait.length?
+      '· '+lyPalace.stars.filter(s=>STAR_KEY[s]).map(s=>s+STAR_KEY[s]).join('、')
+      :'· 空宮宜兼看對宮';
     const el=document.createElement('div');
     el.className='ln-item ln-focus';
-    el.innerHTML=`<span class="ln-label">流年重點</span><span class="ln-val">${lyGan}${lyZhi}年命主看<em>${lyPalace.name}（${lyPalace.zhi}宮）</em>：${starStr}</span>`;
+    el.innerHTML=`<span class="ln-label">流年重點</span><span class="ln-val"><em>${lyPalace.name}（${lyPalace.zhi}宮）</em>·${theme}${traitStr}　星曜：${starStr}</span>`;
     document.getElementById('liunianResult').appendChild(el);
   })();
 
@@ -355,10 +400,112 @@ function render(){
     ['四化('+yearGan+'干)', '祿'+sihua.祿+' 權'+sihua.權+' 科'+sihua.科+' 忌'+sihua.忌]
   ];
   info.innerHTML=infoData.map(d=>`<div class="info-item"><div class="k">${d[0]}</div><div class="v">${d[1]}</div></div>`).join('');
+
+  // 命宮主星斷語
+  const mingPalace=order[0];
+  const mingStars=mingPalace.stars.filter(s=>STAR_DESC[s]);
+  const dyBlock=document.getElementById('duanyuBlock');
+  const dyList=document.getElementById('duanyuList');
+  if(mingStars.length){
+    dyBlock.style.display='';
+    dyList.innerHTML=mingStars.map(s=>{
+      const hua=sihuaMark[s]?'（'+sihuaMark[s]+'）':'';
+      return `<div class="dy-item"><span class="dy-star">${s}${hua}</span><span class="dy-text">${STAR_DESC[s]}</span></div>`;
+    }).join('');
+  } else {
+    dyBlock.style.display='none';
+    // 空宮提示
+    if(!mingPalace.stars.length){
+      const empty=document.getElementById('duanyuList');
+      dyBlock.style.display='';
+      empty.innerHTML=`<div class="dy-item"><span class="dy-star">空宮</span><span class="dy-text">${mingPalace.name}無主星，實務上常借對宮星曜論斷（文化參考）</span></div>`;
+    }
+  }
+
+  // 保存命盤數據，供導出圖片用
+  window.__chartData={order, ms, zz, tf, mingGZ, wj, yearGan, sihuaMark, lyZhi};
 }
 
 document.getElementById('calcBtn').addEventListener('click', render);
+// 自動推流年：出生年干支 + 虛歲 → 流年干支
+function autoLiunian(){
+  const bGan=document.getElementById('yearGan').value;
+  const bZhi=document.getElementById('yearZhi').value;
+  const age=parseInt(document.getElementById('age').value,10)||1;
+  const off=age-1;
+  const g=GAN[n10(gIdx(bGan)+off)];
+  const z=ZHI[n12(zIdx(bZhi)+off)];
+  document.getElementById('lyGan').value=g;
+  document.getElementById('lyZhi').value=z;
+  render();
+}
+document.getElementById('autoLyBtn').addEventListener('click', autoLiunian);
 // 初始排一張
 window.addEventListener('DOMContentLoaded', render);
+
+// 導出命盤圖片（原生 Canvas 重繪，不依賴外部庫）
+function exportChart(){
+  const d=window.__chartData;
+  if(!d||!d.order) return;
+  const S=760, CELL=S/4; // 畫布尺寸
+  const cv=document.createElement('canvas');
+  cv.width=S; cv.height=S;
+  const ctx=cv.getContext('2d');
+  // 背景
+  ctx.fillStyle='#1a1108'; ctx.fillRect(0,0,S,S);
+  // 排版地圖（與 DOM 相同的方位）
+  const P=[[3,0],[3,1],[3,2],[3,3],[2,3],[1,3],[0,3],[0,2],[0,1],[0,0],[1,0],[2,0]];
+  const cellData=Array(4).fill().map(()=>Array(4).fill(null));
+  d.order.forEach((o,i)=>{ cellData[P[i][0]][P[i][1]]=o; });
+  const cx=2, cy=2, cw=CELL-4, ch=CELL-4;
+  for(let r=0;r<4;r++){
+    for(let c=0;c<4;c++){
+      const o=cellData[r][c];
+      if(!o) continue;
+      const x=c*CELL, y=r*CELL;
+      // 宮格背景
+      ctx.fillStyle= o.zhi===d.lyZhi ? 'rgba(201,164,88,.16)' : 'rgba(255,250,238,.05)';
+      ctx.strokeStyle='rgba(201,164,88,.5)';
+      ctx.lineWidth= o.zhi===d.lyZhi?2:1;
+      ctx.fillRect(x+1,y+1,CELL-2,CELL-2);
+      ctx.strokeRect(x+1.5,y+1.5,CELL-3,CELL-3);
+      // 宮名 + 干支
+      ctx.fillStyle='#c9a458'; ctx.font='bold 22px "Noto Serif TC",serif';
+      ctx.textBaseline='middle';
+      let name=o.name;
+      if(o.isMing) name+='·命'; if(o.isShen) name+='·身';
+      ctx.fillText(name, x+14, y+24);
+      ctx.fillStyle='#7a6a50'; ctx.font='17px "Noto Serif TC",serif';
+      ctx.textAlign='right';
+      ctx.fillText(o.gz, x+CELL-14, y+24);
+      ctx.textAlign='left';
+      // 星曜
+      const stars=[...o.stars.map(s=>{let t=s; if(d.sihuaMark&&d.sihuaMark[s])t+=''+d.sihuaMark[s]; return t;}), ...o.aux];
+      ctx.font='17px "Noto Serif TC",serif';
+      let sy=y+56;
+      stars.forEach(s=>{
+        ctx.fillStyle='#7cb295'; ctx.fillText(s, x+14, sy); sy+=26;
+      });
+    }
+  }
+  // 中心天命
+  ctx.fillStyle='#2c1b0c'; ctx.fillRect(S/2-110,S/2-110,220,220);
+  ctx.strokeStyle='#c9a458'; ctx.lineWidth=2; ctx.strokeRect(S/2-110.5,S/2-110.5,221,221);
+  ctx.fillStyle='#e6cf96'; ctx.font='bold 34px "Noto Serif TC",serif';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(d.mingGZ, S/2, S/2-8);
+  ctx.fillStyle='#7a6a50'; ctx.font='20px "Noto Serif TC",serif';
+  ctx.fillText('命盤', S/2, S/2+40);
+  ctx.textAlign='left';
+  // 下載
+  cv.toBlob(b=>{
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(b);
+    a.download='ziwei-chart-'+d.yearGan+d.zz+'.png';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+}
+document.getElementById('exportBtn').addEventListener('click', exportChart);
 
 })();
