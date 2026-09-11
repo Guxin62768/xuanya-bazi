@@ -132,7 +132,7 @@ body{
 .lg-aux::before{border:1px solid var(--gold)}
 
 /* ----- info ----- */
-.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .info-item{background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:9px;padding:12px 14px}
 .info-item .k{font-size:12px;color:var(--gold);letter-spacing:2px;margin-bottom:5px}
 .info-item .v{font-size:15px;color:var(--paper);line-height:1.6}
@@ -154,9 +154,9 @@ body{
 .ln-item.ln-gloss{border-left:3px solid var(--jade);background:rgba(90,125,106,.08)}
 .ln-gloss .ln-label{color:var(--jade)}
 .star.ly-sihua{outline:1px solid var(--gold);outline-offset:1px;color:#ffe9b8}
-.shensha-block{margin-top:16px}
+.shensha-block{margin-top:16px;grid-column:1/-1}
 .shensha-title{font-size:14px;color:var(--gold);letter-spacing:2px;margin-bottom:12px}
-.shensha-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.shensha-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
 .ss-item{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:7px;padding:8px 12px}
 .ss-item.ss-ly{border-color:var(--gold);background:rgba(201,164,88,.12)}
 .ss-name{font-size:14px;color:var(--gold-l);letter-spacing:1px}
