@@ -60,10 +60,14 @@ body{
 }
 .calc-btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(178,58,43,.5)}
 .calc-btn:active{transform:translateY(0)}
+.calc-btn.auto-ly{background:linear-gradient(135deg,var(--jade),#3d5a49);box-shadow:0 6px 18px rgba(90,125,106,.35)}
+.calc-btn.auto-ly:hover{box-shadow:0 10px 24px rgba(90,125,106,.5)}
 
 /* ----- chart ----- */
 .chart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 .tian{font-size:15px;color:var(--gold-l);letter-spacing:2px}
+.export-btn{display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.35);border:1px solid var(--line);color:var(--gold);border-radius:7px;padding:7px 12px;font-family:inherit;font-size:13px;letter-spacing:1px;cursor:pointer;transition:border .2s,color .2s}
+.export-btn:hover{border-color:var(--gold);color:var(--gold-l)}
 .chart-wrap{position:relative;margin:0 auto;max-width:760px}
 .chart{
   display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);
@@ -120,6 +124,12 @@ body{
 .info-item{background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:9px;padding:12px 14px}
 .info-item .k{font-size:12px;color:var(--gold);letter-spacing:2px;margin-bottom:5px}
 .info-item .v{font-size:15px;color:var(--paper);line-height:1.6}
+.duanyu-block{margin-top:18px}
+.duanyu-title{font-size:14px;color:var(--gold);letter-spacing:2px;margin-bottom:12px}
+.duanyu-list{display:flex;flex-direction:column;gap:10px}
+.dy-item{display:flex;align-items:flex-start;gap:12px;background:rgba(0,0,0,.3);border:1px solid var(--line);border-left:3px solid var(--cinnabar);border-radius:8px;padding:12px 14px}
+.dy-star{font-size:16px;font-weight:700;color:var(--gold-l);letter-spacing:1px;min-width:70px}
+.dy-text{font-size:14px;color:var(--paper);line-height:1.6}
 
 /* ----- liunian ----- */
 .liunian-form{align-items:end}
