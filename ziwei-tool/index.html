@@ -30,6 +30,7 @@
   <a href="#shierPanel" class="nav-link">十二宮</a>
   <a href="#daxianPanel" class="nav-link">大限</a>
   <a href="#liunianPanel" class="nav-link">流年</a>
+  <a href="#libraryPanel" class="nav-link">斷語庫</a>
   <button id="toTopBtn" class="to-top" type="button" title="回到頂部">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
   </button>
@@ -40,6 +41,18 @@
   <!-- 輸入區 -->
   <section class="panel input-panel">
     <h2 class="panel-title">排盤輸入</h2>
+    <div class="demo-row">
+      <span class="demo-label">體驗示例</span>
+      <select id="demoSel" class="demo-select">
+        <option value="">— 選一個生辰示例 —</option>
+        <option value="boss">浩哥（1968-05-28 亥時）</option>
+        <option value="son">浩哥之子（1995-10-21 酉時）</option>
+        <option value="s4">樣本四（2003-12-31 巳時）</option>
+        <option value="s7">樣本七（2010-04-22 寅時）</option>
+        <option value="s6">樣本六（1958-11-20 戌時）</option>
+      </select>
+      <button id="demoBtn" class="calc-btn auto-ly" type="button">填入</button>
+    </div>
     <div class="solar-box">
       <div class="solar-label">公曆生日（自動轉農曆）</div>
       <div class="solar-grid">
@@ -152,6 +165,14 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
         <span>複製結果</span>
       </button>
+      <button id="shareBtn" class="export-btn" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>
+        <span>分享</span>
+      </button>
+      <button id="saveBtn" class="export-btn" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2zM17 21v-8H7v8M7 3v5h8"/></svg>
+        <span>存命盤</span>
+      </button>
     </div>
     <div class="chart-wrap">
       <div class="chart" id="chart"></div>
@@ -236,6 +257,32 @@
     </div>
   </section>
 
+  <section class="panel records-panel" id="recordsPanel" style="display:none">
+    <h2 class="panel-title">命盤記錄</h2>
+    <p class="sf-desc">已保存的命盤（存於本機瀏覽器）</p>
+    <div id="recordsList" class="records-list"></div>
+  </section>
+
+  <section class="panel library-panel" id="libraryPanel" style="display:none">
+    <h2 class="panel-title">斷語庫</h2>
+    <p class="sf-desc">十四主星 · 十二宮 · 四化 · 神煞 通用斷語（中性文化參考）</p>
+    <div class="lib-section">
+      <div class="lib-title">十四主星斷語</div>
+      <div id="libStars" class="lib-grid"></div>
+    </div>
+    <div class="lib-section">
+      <div class="lib-title">十二宮主題</div>
+      <div id="libPalaces" class="lib-grid"></div>
+    </div>
+    <div class="lib-section">
+      <div class="lib-title">四化斷語</div>
+      <div id="libSihua" class="lib-grid"></div>
+    </div>
+    <div class="lib-section">
+      <div class="lib-title">十二神煞斷語</div>
+      <div id="libShensha" class="lib-grid"></div>
+    </div>
+  </section>
 </main>
 
 <footer class="site-footer">
