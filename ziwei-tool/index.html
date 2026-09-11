@@ -34,6 +34,7 @@
   <a href="#fengshuiPanel" class="nav-link">風水</a>
   <a href="#healthPanel" class="nav-link">健康</a>
   <a href="#flowerPanel" class="nav-link">桃花貴人</a>
+  <a href="#hehunPanel" class="nav-link">合婚</a>
   <a href="#daxianPanel" class="nav-link">大限</a>
   <a href="#liunianPanel" class="nav-link">流年</a>
   <a href="#libraryPanel" class="nav-link">斷語庫</a>
@@ -252,6 +253,29 @@
   <section class="panel flower-panel" id="flowerPanel" style="display:none">
     <h2 class="panel-title">桃花 · 貴人 · 學業</h2>
     <div id="flowerContent" class="fort-content"></div>
+  </section>
+
+  <section class="panel hehun-panel" id="hehunPanel" style="display:none">
+    <h2 class="panel-title">合婚分析</h2>
+    <p class="sf-desc">以命主為甲，輸入乙方的公曆生辰，評估兩人相合</p>
+    <div class="solar-grid">
+      <label class="field"><span>乙方 年</span><input id="hy" type="number" min="1900" max="2100" value="1995"></label>
+      <label class="field"><span>月</span><input id="hm" type="number" min="1" max="12" value="10"></label>
+      <label class="field"><span>日</span><input id="hd" type="number" min="1" max="31" value="21"></label>
+      <label class="field"><span>時</span>
+        <select id="hh">
+          <option value="0">子時</option><option value="1">丑時</option><option value="2">寅時</option>
+          <option value="3">卯時</option><option value="4">辰時</option><option value="5">巳時</option>
+          <option value="6">午時</option><option value="7">未時</option><option value="8">申時</option>
+          <option value="9" selected>酉時</option><option value="10">戌時</option><option value="11">亥時</option>
+        </select>
+      </label>
+      <label class="field"><span>性別</span>
+        <select id="hg"><option value="男">男</option><option value="女" selected>女</option></select>
+      </label>
+      <button id="hehunBtn" class="calc-btn auto-ly" type="button">合婚</button>
+    </div>
+    <div id="hehunResult" class="fort-content" style="margin-top:14px"></div>
   </section>
 
   <section class="panel daxian-panel" id="daxianPanel" style="display:none">
