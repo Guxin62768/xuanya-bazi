@@ -561,6 +561,7 @@ function render(){
   renderFortune(order, sihuaMark, sihua, ms.mingZhi, ms.shenZhi, wj, aux);
   renderName(yearGan, yearZhi, ms.mingZhi, wj);
   renderLucky(yearGan, yearZhi);
+  renderFengshui(order, aux);
 
   // 命宮主星斷語
   const mingPalace=order[0];
@@ -953,6 +954,38 @@ function renderLucky(yearGan, yearZhi){
   // 建議幸運數字
   H.push('<div class="ft-item"><div class="ft-head">吉祥數字建議</div><div class="ft-body">');
   H.push('<div class="ft-line"><span class="ft-key">補'+ganWu+'</span>'+(ganWu==='水'?'1、6':ganWu==='火'?'2、7':ganWu==='木'?'3、8':ganWu==='金'?'4、9':'5、0')+'</div>');
+  H.push('</div></div>');
+  box.innerHTML=H.join('');
+}
+
+// 風水方位
+const ZHI_FANGWEI={子:'正北',丑:'東北',寅:'東北',卯:'正東',辰:'東南',巳:'東南',午:'正南',未:'西南',申:'西南',酉:'正西',戌:'西北',亥:'西北'};
+function renderFengshui(order, aux){
+  const panel=document.getElementById('fengshuiPanel');
+  const box=document.getElementById('fengshuiContent');
+  panel.style.display='';
+  const H=[];
+  H.push('<div class="ft-item"><div class="ft-head">文昌位（書房·學業）</div><div class="ft-body">');
+  // 文昌星落宮
+  let wenchangZhi=null;
+  for(const z of ZHI){ if((aux[z]||[]).includes('文昌')){ wenchangZhi=z; break; } }
+  if(wenchangZhi) H.push('<div class="ft-line"><span class="ft-key">文昌在'+wenchangZhi+'宮</span>書房/書桌宜朝'+ZHI_FANGWEI[wenchangZhi]+'</div>');
+  else H.push('<div class="ft-line">文昌星位需配合年干安星</div>');
+  H.push('</div></div>');
+  // 財帛宮財位
+  const cp=order[4];
+  H.push('<div class="ft-item"><div class="ft-head">財位（財帛宮方位）</div><div class="ft-body">');
+  H.push('<div class="ft-line"><span class="ft-key">財帛宮在'+cp.zhi+'宮</span>宜於'+ZHI_FANGWEI[cp.zhi]+'佈財位/收銀/保險櫃</div>');
+  H.push('</div></div>');
+  // 田宅宮住宅方位
+  const tp=order[9];
+  H.push('<div class="ft-item"><div class="ft-head">住宅方位（田宅宮）</div><div class="ft-body">');
+  H.push('<div class="ft-line"><span class="ft-key">田宅宮在'+tp.zhi+'宮</span>宅命根基方位在'+ZHI_FANGWEI[tp.zhi]+'，宜重該方位採光通風</div>');
+  H.push('</div></div>');
+  // 命宮宜忌方位
+  const mp=order[0];
+  H.push('<div class="ft-item"><div class="ft-head">命宮方位</div><div class="ft-body">');
+  H.push('<div class="ft-line"><span class="ft-key">命宮在'+mp.zhi+'宮</span>主臥/辦公桌宜朝向'+ZHI_FANGWEI[mp.zhi]+'</div>');
   H.push('</div></div>');
   box.innerHTML=H.join('');
 }
