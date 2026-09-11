@@ -657,4 +657,43 @@ document.querySelectorAll('.nav-link').forEach(a=>{
 });
 document.getElementById('toTopBtn').addEventListener('click', ()=>window.scrollTo({top:0, behavior:'smooth'}));
 
+// 複製排盤結果
+function copyResult(){
+  const d=window.__chartData;
+  if(!d) return;
+  const birth=window.__birth;
+  const bazi=window.__bazi;
+  let txt='【玄曜紫微斗數 · 排盤結果】\n';
+  if(birth) txt+='出生：'+birth.sy+'年'+birth.sm+'月'+birth.sd+'日 · '+birth.sg+'命\n';
+  if(bazi) txt+='八字：'+bazi.map(b=>b.gz).join(' ')+'\n';
+  txt+='\n【命盤】\n';
+  txt+='命宮：'+d.mingGZ+'（'+d.mingZhi+'宮）　身宮：'+d.shenZhi+'宮\n';
+  txt+='五行局：'+d.wj.juName+'　紫微在'+d.zz+'宮　天府在'+d.tf+'宮\n';
+  txt+='命主：'+(MINGZHU[d.yearZhi]||'')+'　身主：'+(SHENZHU[d.yearZhi]||'')+'\n';
+  txt+='四化：祿'+d.sihua.祿+' 權'+d.sihua.權+' 科'+d.sihua.科+' 忌'+d.sihua.忌+'\n';
+  txt+='\n【十二宮】\n';
+  d.order.forEach((p,i)=>{
+    const stars=[...p.stars.map(s=>s+(d.sihuaMark&&d.sihuaMark[s]?'('+d.sihuaMark[s]+')':'')),...p.aux];
+    txt+=PALACE_NAMES[i]+'（'+p.zhi+'宮·'+p.gz+'）：'+(stars.length?stars.join('、'):'空宮')+'\n';
+  });
+  // 大限
+  if(d.daxian){
+    txt+='\n【大限】（'+(d.daxian.shun?'順行':'逆行')+'·'+d.daxian.start+'歲起）\n';
+    d.daxian.res.forEach(l=>{ txt+=l.startAge+'歲 '+l.name+'·'+l.zhi+'（'+l.startAge+'-'+l.startAge+9+'歲）\n'; });
+  }
+  // 複製
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(()=>alert('已複製排盤結果！')).catch(()=>fallbackCopy(txt));
+  } else {
+    fallbackCopy(txt);
+  }
+}
+function fallbackCopy(txt){
+  const ta=document.createElement('textarea');
+  ta.value=txt; document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); alert('已複製排盤結果！'); }catch(e){ alert('複製失敗，請手動複製'); }
+  document.body.removeChild(ta);
+}
+document.getElementById('copyBtn').addEventListener('click', copyResult);
+
 })();
