@@ -591,6 +591,7 @@ function render(){
   renderFlower(yearZhi, aux, gzMap);
   document.getElementById('hehunPanel').style.display='';
   document.getElementById('wugePanel').style.display='';
+  document.getElementById('haoPanel').style.display='';
 
   // 命宮主星斷語
   const mingPalace=order[0];
@@ -1190,6 +1191,47 @@ function renderWuge(){
   box.innerHTML=H.join('');
 }
 document.getElementById('wugeBtn').addEventListener('click', renderWuge);
+
+// 吉祥號評分
+function renderHao(){
+  const panel=document.getElementById('haoPanel');
+  const box=document.getElementById('haoResult');
+  panel.style.display='';
+  const num=document.getElementById('haoNum').value.replace(/\D/g,'');
+  if(!num){ box.innerHTML='<div class="ft-item"><div class="ft-body">請輸入號碼</div></div>'; return; }
+  // 喜用五行（年干五行）
+  const yearGan=document.getElementById('yearGan').value;
+  const xiW=GAN_WUXING[yearGan]||'土';
+  // 每位数字五行
+  let score=60;
+  const H=[];
+  H.push('<div class="ft-item"><div class="ft-head">號碼 '+num+'</div><div class="ft-body">');
+  // 数字五行分布
+  const digits=num.split('');
+  const wCount={木:0,火:0,土:0,金:0,水:0};
+  digits.forEach(d=>{ const w=NUM_WUXING[parseInt(d)]; wCount[w]=(wCount[w]||0)+1; });
+  H.push('<div class="ft-line">數字五行：'+Object.entries(wCount).map(([k,v])=>k+v).join('　')+'</div>');
+  // 尾数
+  const lastW=NUM_WUXING[parseInt(digits[digits.length-1])];
+  H.push('<div class="ft-line"><span class="ft-key">尾數五行</span>'+lastW+'</div>');
+  // 喜用判断
+  if(lastW===xiW){ score+=20; H.push('<div class="ft-line"><span class="ft-key">尾數</span>屬'+lastW+'，與年干'+xiW+'相合，吉！</div>'); }
+  else if(({木:'火',火:'土',土:'金',金:'水',水:'木'})[xiW]===lastW){ score+=12; H.push('<div class="ft-line"><span class="ft-key">尾數</span>屬'+lastW+'，生年干'+xiW+'，相生，吉！</div>'); }
+  else { score-=8; H.push('<div class="ft-line"><span class="ft-key">尾數</span>屬'+lastW+'，與年干'+xiW+'不相生，可斟酌</div>'); }
+  // 数理：数字和
+  let sum=digits.reduce((a,b)=>a+parseInt(b),0);
+  const sheng=(sum%9===0?9:sum%9);
+  H.push('<div class="ft-line"><span class="ft-key">數理</span>數字和'+sum+'（'+(sheng>=5?'數偏吉':'數偏中')+'）</div>');
+  H.push('</div></div>');
+  // 综合评分
+  const finalScore=Math.min(99,score);
+  const grade=finalScore>=85?'上吉':finalScore>=70?'中吉':finalScore>=60?'中平':'偏凶';
+  H.push('<div class="ft-item"><div class="ft-head">綜合評分</div><div class="ft-body">');
+  H.push('<div class="ft-line"><span class="ft-key">評分</span><span style="font-size:26px;color:var(--gold-l);font-weight:700">'+finalScore+'分</span>（'+grade+'）</div>');
+  H.push('</div></div>');
+  box.innerHTML=H.join('');
+}
+document.getElementById('haoBtn').addEventListener('click', renderHao);
 
 // 斷語庫渲染
 function initLibrary(){
