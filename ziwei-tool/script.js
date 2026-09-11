@@ -250,11 +250,13 @@ function render(){
 
   // 大限
   const dx=calcDaxian(yearGan, gender, ms.mingZhi, ju);
+  const currentAge=parseInt(document.getElementById('age').value,10)||1;
   const dxDesc=(dx.shun?'陽男/陰女順行':'陰男/陽女逆行')+' · '+wj.juName+'起運 '+dx.start+'歲';
   document.getElementById('daxianDesc').textContent=dxDesc;
-  document.getElementById('daxianList').innerHTML=dx.res.map(l=>
-    `<div class="dx-item"><span class="dx-age">${l.startAge}歲</span><span class="dx-name">${l.name} · ${l.zhi}</span><span class="dx-range">${l.startAge}-${l.startAge+9}歲</span></div>`
-  ).join('');
+  document.getElementById('daxianList').innerHTML=dx.res.map(l=>{
+    const isCur = currentAge>=l.startAge && currentAge<=l.startAge+9;
+    return `<div class="dx-item${isCur?' dx-cur':''}"><span class="dx-age">${l.startAge}歲</span><span class="dx-name">${l.name} · ${l.zhi}${isCur?'<em class="dx-tag">當運</em>':''}</span><span class="dx-range">${l.startAge}-${l.startAge+9}歲</span></div>`;
+  }).join('');
 
   // 流年太歲 + 小限 + 十二神煞
   document.getElementById('liunianPanel').style.display='';
@@ -436,9 +438,13 @@ function render(){
     dyBlock.style.display='none';
     // 空宮提示
     if(!mingPalace.stars.length){
+      const duiZhi=ZHI[n12(zIdx(mingPalace.zhi)+6)]; // 對宮=+6
+      const duiPal=order.find(o=>o.zhi===duiZhi);
+      const duiStars=duiPal?duiPal.stars.join('、'):'無';
+      const duiName=duiPal?duiPal.name:'';
       const empty=document.getElementById('duanyuList');
       dyBlock.style.display='';
-      empty.innerHTML=`<div class="dy-item"><span class="dy-star">空宮</span><span class="dy-text">${mingPalace.name}無主星，實務上常借對宮星曜論斷（文化參考）</span></div>`;
+      empty.innerHTML=`<div class="dy-item"><span class="dy-star">空宮</span><span class="dy-text">${mingPalace.name}無主星，實務上借對宮〈${duiName}·${duiZhi}宮〉論斷：${duiStars}（文化參考）</span></div>`;
     }
   }
 
