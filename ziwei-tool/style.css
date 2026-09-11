@@ -1,0 +1,154 @@
+/* ============ 玄曜 · 紫微斗數命盤 樣式 ============ */
+:root{
+  --ink:#1a1108;
+  --paper:#f5ead6;
+  --cinnabar:#b23a2b;      /* 朱砂 */
+  --cinnabar-d:#7d2418;
+  --gold:#c9a458;          /* 金 */
+  --gold-l:#e6cf96;
+  --jade:#5a7d6a;          /* 玉 */
+  --line:rgba(201,164,88,.35);
+  --txt:#2a1c10;
+  --muted:#7a6a50;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Noto Serif TC",serif;
+  background:radial-gradient(1200px 800px at 70% -10%, #3a2a18 0%, var(--ink) 55%),var(--ink);
+  color:var(--paper);
+  min-height:100vh;
+  position:relative;
+  -webkit-font-smoothing:antialiased;
+}
+.bg-grain{
+  position:fixed;inset:0;pointer-events:none;opacity:.5;z-index:0;
+  background-image:
+    radial-gradient(rgba(255,255,255,.02) 1px,transparent 1px);
+  background-size:4px 4px;
+}
+.app,.site-header,.site-footer{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 22px;}
+
+/* ----- header ----- */
+.site-header{padding:34px 22px 10px}
+.header-inner{display:flex;align-items:baseline;gap:18px;border-bottom:1px solid var(--line);padding-bottom:16px}
+.logo{font-size:30px;font-weight:900;letter-spacing:6px;color:var(--gold-l)}
+.logo span{display:inline-block;font-size:14px;font-weight:400;color:var(--cinnabar);letter-spacing:4px;margin-left:6px;vertical-align:middle}
+.tagline{color:var(--muted);font-size:13px;letter-spacing:3px}
+
+/* ----- panel ----- */
+.panel{background:linear-gradient(180deg,rgba(255,250,238,.04),rgba(255,250,238,.01));border:1px solid var(--line);border-radius:14px;margin:22px 0;padding:24px}
+.panel-title{font-size:16px;letter-spacing:4px;color:var(--gold);border-left:3px solid var(--cinnabar);padding-left:12px;margin-bottom:18px;font-weight:700}
+
+/* ----- form ----- */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field span{font-size:13px;color:var(--gold);letter-spacing:2px}
+.field select,.field input{
+  background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:8px;
+  color:var(--paper);padding:11px 12px;font-family:inherit;font-size:15px;outline:none;
+  transition:border .2s;
+}
+.field select:focus,.field input:focus{border-color:var(--gold)}
+.field input[type=number]{width:100%}
+.calc-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:0;background:linear-gradient(135deg,var(--cinnabar),var(--cinnabar-d));
+  border:none;border-radius:8px;color:#fff;font-family:inherit;font-size:16px;letter-spacing:3px;
+  padding:12px 18px;cursor:pointer;align-self:end;font-weight:700;
+  box-shadow:0 6px 18px rgba(178,58,43,.35);transition:transform .15s,box-shadow .15s;
+}
+.calc-btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(178,58,43,.5)}
+.calc-btn:active{transform:translateY(0)}
+
+/* ----- chart ----- */
+.chart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.tian{font-size:15px;color:var(--gold-l);letter-spacing:2px}
+.chart-wrap{position:relative;margin:0 auto;max-width:760px}
+.chart{
+  display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);
+  gap:6px;height:78vh;min-height:480px;max-height:680px;
+}
+.palace{
+  background:linear-gradient(160deg,rgba(255,250,238,.07),rgba(255,250,238,.02));
+  border:1px solid var(--line);border-radius:10px;padding:8px;
+  display:flex;flex-direction:column;position:relative;overflow:hidden;
+  transition:background .3s;
+}
+.palace:hover{background:rgba(201,164,88,.08)}
+.palace .pal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.palace .pal-name{font-size:14px;letter-spacing:2px;color:var(--gold);font-weight:700}
+.palace .pal-gz{font-size:12px;color:var(--muted);letter-spacing:1px}
+.palace .pal-stars{display:flex;flex-wrap:wrap;gap:5px;margin-top:auto}
+.star{
+  font-size:13px;padding:2px 7px;border-radius:5px;
+  background:rgba(0,0,0,.3);color:var(--jade);letter-spacing:1px;border:1px solid rgba(90,125,106,.3);
+}
+.star.ziwei{background:rgba(178,58,43,.22);color:#ffd9c9;border-color:rgba(178,58,43,.5)}
+.star.tianfu{background:rgba(201,164,88,.16);color:var(--gold-l);border-color:var(--line)}
+.star.sihua{color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);background:rgba(120,80,20,.35)}
+.star.aux{font-size:11px;background:rgba(90,125,106,.12);color:#a8c9b4;border-color:rgba(90,125,106,.3)}
+.star.sha{background:rgba(120,60,80,.15);color:#d9a8b8;border-color:rgba(180,80,100,.35)}
+.palace.ming{box-shadow:inset 0 0 0 2px var(--cinnabar)}
+.palace.shen{box-shadow:inset 0 0 0 1px var(--gold)}
+.palace.ly{background:rgba(201,164,88,.16);box-shadow:inset 0 0 0 2px var(--gold)}
+.palace.xx{background:rgba(90,125,106,.16);box-shadow:inset 0 0 0 2px var(--jade)}
+.lg-aux2::before{background:rgba(90,125,106,.5)}
+.lg-sha::before{background:rgba(180,80,100,.5)}
+
+.center-square{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:26%;height:26%;min-width:150px;min-height:150px;
+  background:linear-gradient(160deg,#2c1b0c,#1d1206);
+  border:2px solid var(--gold);border-radius:8px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  box-shadow:0 0 40px rgba(201,164,88,.25);
+}
+.center-gz{font-size:20px;color:var(--gold-l);letter-spacing:4px;font-weight:700}
+.center-name{font-size:13px;color:var(--muted);letter-spacing:6px}
+
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:16px;justify-content:center}
+.lg{font-size:12px;color:var(--muted);letter-spacing:1px;display:flex;align-items:center;gap:6px}
+.lg::before{content:"";width:12px;height:12px;border-radius:3px;display:inline-block}
+.lg-ziwei::before{background:rgba(178,58,43,.6)}
+.lg-tianfu::before{background:rgba(201,164,88,.6)}
+.lg-4h::before{background:rgba(120,80,20,.6)}
+.lg-aux::before{border:1px solid var(--gold)}
+
+/* ----- info ----- */
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.info-item{background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:9px;padding:12px 14px}
+.info-item .k{font-size:12px;color:var(--gold);letter-spacing:2px;margin-bottom:5px}
+.info-item .v{font-size:15px;color:var(--paper);line-height:1.6}
+
+/* ----- liunian ----- */
+.liunian-form{align-items:end}
+.liunian-result{grid-column:1/-1;display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.ln-item{display:flex;align-items:center;gap:12px;background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+.ln-label{font-size:13px;color:var(--gold);letter-spacing:2px;min-width:80px}
+.ln-val{font-size:15px;color:var(--paper);letter-spacing:1px}
+.star.ly-sihua{outline:1px solid var(--gold);outline-offset:1px;color:#ffe9b8}
+.shensha-block{margin-top:16px}
+.shensha-title{font-size:14px;color:var(--gold);letter-spacing:2px;margin-bottom:12px}
+.shensha-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.ss-item{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:7px;padding:8px 12px}
+.ss-item.ss-ly{border-color:var(--gold);background:rgba(201,164,88,.12)}
+.ss-name{font-size:14px;color:var(--gold-l);letter-spacing:1px}
+.ss-zhi{font-size:12px;color:var(--muted)}
+.daxian-desc{color:var(--gold);font-size:14px;letter-spacing:2px;margin-bottom:14px}
+.daxian-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.dx-item{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.3);border:1px solid var(--line);border-left:3px solid var(--cinnabar);border-radius:8px;padding:10px 14px}
+.dx-age{font-size:18px;font-weight:700;color:var(--gold-l);min-width:52px}
+.dx-name{font-size:14px;color:var(--paper);letter-spacing:1px;flex:1}
+.dx-range{font-size:12px;color:var(--muted)}
+
+/* ----- footer ----- */
+.site-footer{text-align:center;color:var(--muted);font-size:12px;letter-spacing:2px;padding:30px 22px 40px;border-top:1px solid var(--line);margin-top:20px}
+
+/* responsive */
+@media(max-width:640px){
+  .chart{height:60vh;min-height:420px}
+  .center-square{min-width:110px;min-height:110px}
+  .star{font-size:11px;padding:1px 5px}
+  .palace .pal-name{font-size:12px}
+}
