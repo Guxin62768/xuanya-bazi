@@ -216,6 +216,20 @@ const SI_HUA_DESC={
   '科':'當年名聲彰顯，利於文名、聲望、貴人提攜',
   '忌':'當年需多留意，防其對應領域的困擾或執著'
 };
+const SS_DESC={
+  '歲建':'本命太歲，主當年根基與整體氣運，宜穩重行事',
+  '晦氣':'主情緒低落、易有悶氣，宜多開解、少計較',
+  '喪門':'主家中長輩或親友之事，宜多關心、防意外',
+  '貫索':'主牽絆、糾纏，宜謹言慎行、防口舌是非',
+  '官符':'主官司、文書、是非，宜守法守規、防訴訟',
+  '小耗':'主小破財、小耗損，宜節制開支、防遺失',
+  '大耗':'主較大破耗、損財，宜謹慎理財、防大額支出',
+  '龍德':'主貴人、吉祥，逢之多得助力、諸事順遂',
+  '白虎':'主血光、爭鬥、壓力，宜防意外、保平安',
+  '天德':'主天賜福澤、化解凶厄，逢之多有庇佑',
+  '弔客':'主弔喪、探病之事，宜注意健康、少涉喪事',
+  '病符':'主小病、體弱，宜注意養生、防微恙'
+};
 
 /* 15. 公曆→農曆自動填盤（用 lunar.js） */
 const TIME_ZHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
@@ -318,12 +332,13 @@ function render(){
   Object.entries(ln.lySihua).forEach(([k,star])=>lySihuaMark[star]=k);
   window.__lySihuaMark=lySihuaMark;
   // 十二神煞
-  const SHENSHA=['歲建','晦氣','喪門','貫索','官符','小耗','大耗','龍德','白虎','天德','弔客','病符'];
+  const SS=['歲建','晦氣','喪門','貫索','官符','小耗','大耗','龍德','白虎','天德','弔客','病符'];
   const ssStart=zIdx(lyZhi);
-  document.getElementById('shenshaGrid').innerHTML=SHENSHA.map((s,i)=>{
+  document.getElementById('shenshaGrid').innerHTML=SS.map((s,i)=>{
     const z=ZHI[n12(ssStart+i)];
     const isLy = z===lyZhi;
-    return `<div class="ss-item${isLy?' ss-ly':''}"><span class="ss-name">${s}</span><span class="ss-zhi">${z}宮</span></div>`;
+    const desc=SS_DESC[s]||'';
+    return `<div class="ss-item${isLy?' ss-ly':''}" title="${desc}"><span class="ss-name">${s}</span><span class="ss-zhi">${z}宮</span><span class="ss-desc">${desc}</span></div>`;
   }).join('');
 
   // 四化標記：找出四化星落宮（祿/權/科/忌 標在星旁）
