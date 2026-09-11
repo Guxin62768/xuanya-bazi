@@ -127,6 +127,8 @@ body{
 .ln-item{display:flex;align-items:center;gap:12px;background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
 .ln-label{font-size:13px;color:var(--gold);letter-spacing:2px;min-width:80px}
 .ln-val{font-size:15px;color:var(--paper);letter-spacing:1px}
+.ln-item.ln-focus{border-left:3px solid var(--gold);background:rgba(201,164,88,.08)}
+.ln-focus em{color:var(--gold-l);font-style:normal;font-weight:700}
 .star.ly-sihua{outline:1px solid var(--gold);outline-offset:1px;color:#ffe9b8}
 .shensha-block{margin-top:16px}
 .shensha-title{font-size:14px;color:var(--gold);letter-spacing:2px;margin-bottom:12px}
