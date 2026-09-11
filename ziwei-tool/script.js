@@ -696,4 +696,17 @@ function fallbackCopy(txt){
 }
 document.getElementById('copyBtn').addEventListener('click', copyResult);
 
+// 主題切換
+function applyTheme(t){
+  document.body.classList.toggle('light', t==='light');
+  localStorage.setItem('ziwei_theme', t);
+}
+document.getElementById('themeBtn').addEventListener('click', ()=>{
+  const isLight=document.body.classList.contains('light');
+  applyTheme(isLight?'dark':'light');
+});
+// 載入已存主題
+const saved=localStorage.getItem('ziwei_theme');
+if(saved==='light') applyTheme('light');
+
 })();
