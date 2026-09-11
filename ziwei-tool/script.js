@@ -254,6 +254,24 @@ const GAN_WUXING={甲:'木',乙:'木',丙:'火',丁:'火',戊:'土',己:'土',�
 const ZHI_WUXING={子:'水',丑:'土',寅:'木',卯:'木',辰:'土',巳:'火',午:'火',未:'土',申:'金',酉:'金',戌:'土',亥:'水'};
 const NUM_WUXING={1:'水',2:'火',3:'木',4:'金',5:'土',6:'水',7:'火',8:'木',9:'金',0:'土'};
 
+/* 疾厄宮主星健康特質（中性參考） */
+const HEALTH_STAR={
+  '紫微':'主貴氣，體質根基較穩，宜注意心血管與壓力',
+  '天機':'主思慮，宜注意神經系統與睡眠、用腦過度',
+  '太陽':'主心火，宜注意心臟、血壓與眼目',
+  '武曲':'主金氣，宜注意肺、呼吸道與筋骨',
+  '天同':'主福氣，體質多安逸，宜防過度慵懶與代謝',
+  '廉貞':'主火氣，宜注意血液循環、婦科與情緒',
+  '天府':'主庫藏，體質多穩健，宜注意消化與積累',
+  '太陰':'主水氣，宜注意腎、泌尿與寒濕',
+  '貪狼':'主慾望，宜注意肝膽、生殖與過度消耗',
+  '巨門':'主口舌，宜注意脾胃、消化與口齒',
+  '天相':'主輔佐，體質多平和，宜注意皮膚與過敏',
+  '天梁':'主蔭護，有化解之能，宜注意肝膽與長者之疾',
+  '七殺':'主剛烈，宜注意意外、筋骨與血光',
+  '破軍':'主變動，宜注意突發之疾與新陳代謝'
+};
+
 /* 15. 公曆→農曆自動填盤（用 lunar.js） */
 const TIME_ZHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 function solarToAll(sy, sm, sd, sh){
@@ -562,6 +580,7 @@ function render(){
   renderName(yearGan, yearZhi, ms.mingZhi, wj);
   renderLucky(yearGan, yearZhi);
   renderFengshui(order, aux);
+  renderHealth(order, sihuaMark);
 
   // 命宮主星斷語
   const mingPalace=order[0];
@@ -986,6 +1005,32 @@ function renderFengshui(order, aux){
   const mp=order[0];
   H.push('<div class="ft-item"><div class="ft-head">命宮方位</div><div class="ft-body">');
   H.push('<div class="ft-line"><span class="ft-key">命宮在'+mp.zhi+'宮</span>主臥/辦公桌宜朝向'+ZHI_FANGWEI[mp.zhi]+'</div>');
+  H.push('</div></div>');
+  box.innerHTML=H.join('');
+}
+
+// 健康分析（疾厄宮）
+function renderHealth(order, sihuaMark){
+  const panel=document.getElementById('healthPanel');
+  const box=document.getElementById('healthContent');
+  panel.style.display='';
+  const H=[];
+  const hp=order[5]; // 疾厄宮
+  H.push('<div class="ft-item"><div class="ft-head">疾厄宮（'+hp.zhi+'宮·'+hp.gz+'）</div><div class="ft-body">');
+  const healthStars=hp.stars.filter(s=>HEALTH_STAR[s]);
+  if(healthStars.length){
+    healthStars.forEach(s=>H.push('<div class="ft-line"><span class="ft-key">'+s+(sihuaMark&&sihuaMark[s]?'('+sihuaMark[s]+')':'')+'</span>'+HEALTH_STAR[s]+'</div>'));
+  } else {
+    const dui=order[11];
+    const duiH=dui.stars.filter(s=>HEALTH_STAR[s]);
+    if(duiH.length) duiH.forEach(s=>H.push('<div class="ft-line"><span class="ft-key">'+s+'（借對宮）</span>'+HEALTH_STAR[s]+'</div>'));
+    else H.push('<div class="ft-line">疾厄宮空宮，體質較需自主調養</div>');
+  }
+  const sha=hp.aux.filter(s=>['擎羊','陀羅','火星','鈴星','地空','地劫'].includes(s));
+  if(sha.length) H.push('<div class="ft-line"><span class="ft-key">煞星</span>'+sha.join('、')+'，宜注意突發與勞損</div>');
+  H.push('</div></div>');
+  H.push('<div class="ft-item"><div class="ft-head">健康方位</div><div class="ft-body">');
+  H.push('<div class="ft-line"><span class="ft-key">疾厄宮在'+hp.zhi+'宮</span>養生宜重'+ZHI_FANGWEI[hp.zhi]+'方位之環境</div>');
   H.push('</div></div>');
   box.innerHTML=H.join('');
 }
