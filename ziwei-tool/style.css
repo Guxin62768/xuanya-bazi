@@ -309,3 +309,10 @@ body{
 /* 大限四化 */
 .dx-sihua{font-size:11px;color:var(--gold);letter-spacing:.5px;white-space:nowrap}
 @media(max-width:640px){.dx-sihua{font-size:10px}}
+
+/* 風水羅盤 */
+.luopan-wrap{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap;justify-content:center}
+#luopanCanvas{background:var(--surface);border:1px solid var(--line);border-radius:50%;max-width:100%}
+.luopan-legend{display:flex;flex-direction:column;gap:8px}
+.luopan-legend .lg{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-main)}
+.luopan-legend .lg i{width:14px;height:14px;border-radius:50%;display:inline-block}
