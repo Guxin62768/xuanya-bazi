@@ -39,6 +39,7 @@
   <a href="#haoPanel" class="nav-link">吉祥號</a>
   <a href="#luopanPanel" class="nav-link">羅盤</a>
   <a href="#yunchengPanel" class="nav-link">運程</a>
+  <a href="#comparePanel" class="nav-link">對比</a>
   <a href="#daxianPanel" class="nav-link">大限</a>
   <a href="#liunianPanel" class="nav-link">流年</a>
   <a href="#libraryPanel" class="nav-link">斷語庫</a>
@@ -317,6 +318,22 @@
     <h2 class="panel-title">生肖運程</h2>
     <p class="sf-desc">本命生肖於流年的運勢概要（文化參考）</p>
     <div id="yunchengContent" class="fort-content"></div>
+  </section>
+
+  <section class="panel compare-panel" id="comparePanel" style="display:none">
+    <h2 class="panel-title">多盤對比</h2>
+    <p class="sf-desc">排兩張盤左右對照：輸入第二盤的公曆生日，並排比較關鍵指標</p>
+    <div class="solar-grid">
+      <label class="field"><span>第二盤 年</span><input id="c2y" type="number" value="1995"></label>
+      <label class="field"><span>月</span><input id="c2m" type="number" value="10"></label>
+      <label class="field"><span>日</span><input id="c2d" type="number" value="21"></label>
+      <label class="field"><span>時</span>
+        <select id="c2h"><option value="0">子</option><option value="1">丑</option><option value="2">寅</option><option value="3">卯</option><option value="4">辰</option><option value="5">巳</option><option value="6">午</option><option value="7">未</option><option value="8">申</option><option value="9" selected>酉</option><option value="10">戌</option><option value="11">亥</option></select>
+      </label>
+      <label class="field"><span>性別</span><select id="c2g"><option value="男">男</option><option value="女" selected>女</option></select></label>
+      <button id="compareBtn" class="calc-btn auto-ly" type="button">對比</button>
+    </div>
+    <div id="compareResult" class="compare-grid" style="margin-top:14px"></div>
   </section>
 
   <section class="panel daxian-panel" id="daxianPanel" style="display:none">
