@@ -78,6 +78,7 @@ body{
 /* ----- chart ----- */
 .chart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 .tian{font-size:15px;color:var(--gold-l);letter-spacing:2px}
+.birth-info{font-size:13px;color:var(--muted);letter-spacing:1px;flex:1;margin-left:16px}
 .export-btn{display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.35);border:1px solid var(--line);color:var(--gold);border-radius:7px;padding:7px 12px;font-family:inherit;font-size:13px;letter-spacing:1px;cursor:pointer;transition:border .2s,color .2s}
 .export-btn:hover{border-color:var(--gold);color:var(--gold-l)}
 .chart-wrap{position:relative;margin:0 auto;max-width:760px}
