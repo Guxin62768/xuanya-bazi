@@ -248,6 +248,7 @@ function render(){
   document.getElementById('tianLabel').textContent=tianLabel;
   document.getElementById('ziweiLabel').textContent='紫微 '+zz;
   document.getElementById('centerGanZhi').textContent=mingGZ;
+  document.querySelector('.center-name').textContent=(wj.juName||'')+'·命盤';
 
   // 大限
   const dx=calcDaxian(yearGan, gender, ms.mingZhi, ju);
