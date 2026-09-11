@@ -233,6 +233,37 @@ const SS_DESC={
 const MINGZHU={子:'貪狼',丑:'巨門',寅:'祿存',卯:'文曲',辰:'廉貞',巳:'武曲',午:'破軍',未:'武曲',申:'廉貞',酉:'文曲',戌:'祿存',亥:'巨門'};
 const SHENZHU={子:'火星',丑:'天相',寅:'天梁',卯:'天同',辰:'文昌',巳:'天機',午:'天鉞',未:'天相',申:'天梁',酉:'天同',戌:'文昌',亥:'天機'};
 
+/* 星曜組合斷語（中性） */
+const COMBO_DESC={
+  '紫微天府':'帝星入庫，格局高貴，主掌權而有守成之象',
+  '紫微破軍':'帝星遇破，主破舊立新、開創格局，動中有貴',
+  '紫微貪狼':'桃花帝星，主才華交際，早發而須防誘惑',
+  '天機巨門':'智謀口舌，主善謀斷而多思慮',
+  '太陽太陰':'日月同宮，主貴人緣而陰陽調和，惟較辛勞',
+  '武曲貪狼':'財帛桃花，主求財敏捷而交際廣',
+  '武曲破軍':'財星遇破，主財波動大，宜敢於開創',
+  '武曲七殺':'財星遇殺，主財權兼具，宜防急進',
+  '廉貞貪狼':'雙桃花，主才華風流，感情須專一',
+  '廉貞七殺':'才華遇殺，主魄力強而行事果決',
+  '天同巨門':'福星遇暗，主福祿而多口舌之累',
+  '天同天梁':'福蔭雙全，主安逸有庇護，晚年福厚'
+};
+const STAR_HUJI_DESC={
+  '紫微':'帝星化忌，主貴氣受抑，須防權勢受挫、孤高',
+  '天機':'機星化忌，主思慮過度，防神經緊張、決斷失誤',
+  '太陽':'日星化忌，主名聲受損，防付出無功、親長之憂',
+  '武曲':'財星化忌，主財務波動，防投資失利、破耗',
+  '天同':'福星化忌，主安逸受擾，防懶散誤事',
+  '廉貞':'才星化忌，主才藝受阻，防感情是非、血光',
+  '太陰':'月星化忌，主內斂受抑，防房產、母緣之憂',
+  '貪狼':'桃花化忌，主慾望失控，防感情敗壞、耗損',
+  '巨門':'暗星化忌，主口舌是非加劇，防官非、爭執',
+  '天相':'輔星化忌，主協調失衡，防合作生變',
+  '天梁':'蔭星化忌，主庇護受損，防長輩健康、官司',
+  '七殺':'殺星化忌，主意外加劇，防血光、爭鬥',
+  '破軍':'破星化忌，主變動失序，防突發破敗'
+};
+
 /* 財帛宮主星財富特質（中性參考） */
 const FORTUNE_STAR={
   '紫微':'帝座坐財，主財祿根基穩固，格局高者能聚大財',
@@ -1340,6 +1371,8 @@ function initLibrary(){
   document.getElementById('libSihua').innerHTML=Object.entries(SI_HUA_DESC).map(([s,d])=>`<div class="lib-item"><span class="lib-k">${s}</span><span class="lib-v">${d}</span></div>`).join('');
   // 神煞
   document.getElementById('libShensha').innerHTML=Object.entries(SS_DESC).map(([s,d])=>`<div class="lib-item"><span class="lib-k">${s}</span><span class="lib-v">${d}</span></div>`).join('');
+  document.getElementById('libCombo').innerHTML=Object.entries(COMBO_DESC).map(([s,d])=>`<div class="lib-item"><span class="lib-k">${s}</span><span class="lib-v">${d}</span></div>`).join('');
+  document.getElementById('libHuji').innerHTML=Object.entries(STAR_HUJI_DESC).map(([s,d])=>`<div class="lib-item"><span class="lib-k">${s}化忌</span><span class="lib-v">${d}</span></div>`).join('');
 }
 initLibrary();
 
