@@ -164,8 +164,10 @@ body{
 .daxian-desc{color:var(--gold);font-size:14px;letter-spacing:2px;margin-bottom:14px}
 .daxian-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
 .dx-item{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.3);border:1px solid var(--line);border-left:3px solid var(--cinnabar);border-radius:8px;padding:10px 14px}
+.dx-item.dx-cur{border-color:var(--gold);background:rgba(201,164,88,.12);border-left-color:var(--gold)}
 .dx-age{font-size:18px;font-weight:700;color:var(--gold-l);min-width:52px}
 .dx-name{font-size:14px;color:var(--paper);letter-spacing:1px;flex:1}
+.dx-tag{font-style:normal;font-weight:700;color:var(--cinnabar);margin-left:4px}
 .dx-range{font-size:12px;color:var(--muted)}
 
 /* ----- footer ----- */
