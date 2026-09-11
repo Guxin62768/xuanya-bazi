@@ -305,3 +305,7 @@ body{
   .panel.collapsed .panel-title::after{transform:translateY(-30%) rotate(-135deg)}
   .panel.collapsed .panel-body{display:none}
 }
+
+/* 大限四化 */
+.dx-sihua{font-size:11px;color:var(--gold);letter-spacing:.5px;white-space:nowrap}
+@media(max-width:640px){.dx-sihua{font-size:10px}}
