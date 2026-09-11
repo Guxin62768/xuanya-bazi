@@ -589,9 +589,11 @@ function render(){
   renderFengshui(order, aux);
   renderHealth(order, sihuaMark);
   renderFlower(yearZhi, aux, gzMap);
+  renderLuopan(order, aux, ms.mingZhi);
   document.getElementById('hehunPanel').style.display='';
   document.getElementById('wugePanel').style.display='';
   document.getElementById('haoPanel').style.display='';
+  document.getElementById('luopanPanel').style.display='';
 
   // 命宮主星斷語
   const mingPalace=order[0];
@@ -1232,6 +1234,69 @@ function renderHao(){
   box.innerHTML=H.join('');
 }
 document.getElementById('haoBtn').addEventListener('click', renderHao);
+
+// 風水羅盤（Canvas）
+const GUA_FANGWEI=['坎北','艮東北','震東','巽東南','離南','坤西南','兌西','乾西北'];
+function renderLuopan(order, aux, mingZhi){
+  const panel=document.getElementById('luopanPanel');
+  const cv=document.getElementById('luopanCanvas');
+  panel.style.display='';
+  const ctx=cv.getContext('2d');
+  const cx=180, cy=180, R=170;
+  ctx.clearRect(0,0,360,360);
+  // 背景
+  const isLight=document.body.classList.contains('light');
+  ctx.fillStyle=isLight?'#f3ead6':'#1a1108';
+  ctx.fillRect(0,0,360,360);
+  // 八卦方位（东=右，顺时针）
+  const gua=[['坎','北'],['艮','東北'],['震','東'],['巽','東南'],['離','南'],['坤','西南'],['兌','西'],['乾','西北']];
+  for(let i=0;i<8;i++){
+    const ang=(i*45-90)*Math.PI/180; // 北在0度
+    const x0=cx+Math.cos(ang)*R*0.5, y0=cy+Math.sin(ang)*R*0.5;
+    // 扇形
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,R*0.85,ang-Math.PI/8,ang+Math.PI/8);
+    ctx.closePath();
+    ctx.fillStyle=(i%2)?(isLight?'#efe4cc':'#241708'):(isLight?'#e6dbc4':'#1d1206');
+    ctx.fill();
+    ctx.strokeStyle=isLight?'#a08040':'#c9a458';
+    ctx.stroke();
+    // 卦名文字
+    const tx=cx+Math.cos(ang)*R*0.62, ty=cy+Math.sin(ang)*R*0.62;
+    ctx.fillStyle=isLight?'#7a5a20':'#e6cf96';
+    ctx.font='bold 16px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(gua[i][0], tx, ty-6);
+    ctx.font='12px serif';
+    ctx.fillText(gua[i][1], tx, ty+12);
+  }
+  // 中心
+  ctx.beginPath(); ctx.arc(cx,cy,R*0.25,0,Math.PI*2);
+  ctx.fillStyle=isLight?'#c9a458':'#2c1b0c';
+  ctx.fill(); ctx.strokeStyle=isLight?'#7a5a20':'#c9a458'; ctx.stroke();
+  ctx.fillStyle=isLight?'#3a2a18':'#e6cf96'; ctx.font='bold 14px serif';
+  ctx.fillText('玄', cx, cy-4); ctx.fillText('曜', cx, cy+12);
+  // 標註關鍵方位（用彩點）
+  const marks=[];
+  const mp=order[0]; // 命宮
+  const cp=order[4]; // 財帛
+  const wenchangZhi=null;
+  for(const z of ZHI){ if((aux[z]||[]).includes('文昌')){ marks.push({name:'文昌',zhi:z,color:'#5a7d6a'}); break; } }
+  marks.push({name:'命宮',zhi:mp.zhi,color:'#c9a458'});
+  marks.push({name:'財位',zhi:cp.zhi,color:'#b23a2b'});
+  // 地支→八卦角度
+  const zhiAng={子:0,丑:45,寅:45,卯:90,辰:135,巳:135,午:180,未:225,申:225,酉:270,戌:315,亥:315};
+  marks.forEach(m=>{
+    const ang=(zhiAng[m.zhi]-90)*Math.PI/180;
+    const x=cx+Math.cos(ang)*R*0.5, y=cy+Math.sin(ang)*R*0.5;
+    ctx.beginPath(); ctx.arc(x,y,6,0,Math.PI*2);
+    ctx.fillStyle=m.color; ctx.fill();
+    ctx.strokeStyle=isLight?'#3a2a18':'#fff'; ctx.lineWidth=1; ctx.stroke();
+  });
+  // 圖例
+  const lg=document.getElementById('luopanLegend');
+  lg.innerHTML=marks.map(m=>`<span class="lg"><i style="background:${m.color}"></i>${m.name}${m.zhi}宮</span>`).join('');
+}
 
 // 斷語庫渲染
 function initLibrary(){
