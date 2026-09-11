@@ -37,6 +37,7 @@
   <a href="#hehunPanel" class="nav-link">合婚</a>
   <a href="#wugePanel" class="nav-link">五格</a>
   <a href="#haoPanel" class="nav-link">吉祥號</a>
+  <a href="#luopanPanel" class="nav-link">羅盤</a>
   <a href="#daxianPanel" class="nav-link">大限</a>
   <a href="#liunianPanel" class="nav-link">流年</a>
   <a href="#libraryPanel" class="nav-link">斷語庫</a>
@@ -300,6 +301,15 @@
       <button id="haoBtn" class="calc-btn auto-ly" type="button">評分</button>
     </div>
     <div id="haoResult" class="fort-content" style="margin-top:14px"></div>
+  </section>
+
+  <section class="panel luopan-panel" id="luopanPanel" style="display:none">
+    <h2 class="panel-title">風水羅盤</h2>
+    <p class="sf-desc">八方卦位羅盤，標示命宮/文昌/財位等關鍵方位</p>
+    <div class="luopan-wrap">
+      <canvas id="luopanCanvas" width="360" height="360"></canvas>
+      <div class="luopan-legend" id="luopanLegend"></div>
+    </div>
   </section>
 
   <section class="panel daxian-panel" id="daxianPanel" style="display:none">
