@@ -230,6 +230,8 @@ const SS_DESC={
   '弔客':'主弔喪、探病之事，宜注意健康、少涉喪事',
   '病符':'主小病、體弱，宜注意養生、防微恙'
 };
+const MINGZHU={子:'貪狼',丑:'巨門',寅:'祿存',卯:'文曲',辰:'廉貞',巳:'武曲',午:'破軍',未:'武曲',申:'廉貞',酉:'文曲',戌:'祿存',亥:'巨門'};
+const SHENZHU={子:'火星',丑:'天相',寅:'天梁',卯:'天同',辰:'文昌',巳:'天機',午:'天鉞',未:'天相',申:'天梁',酉:'天同',戌:'文昌',亥:'天機'};
 
 /* 15. 公曆→農曆自動填盤（用 lunar.js） */
 const TIME_ZHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
@@ -500,7 +502,9 @@ function render(){
     ['五行局', (wj.naYin||'')+' · '+(wj.juName||'未定')],
     ['紫微', zz+'宮'],
     ['天府', tf+'宮'],
-    ['四化('+yearGan+'干)', '祿'+sihua.祿+' 權'+sihua.權+' 科'+sihua.科+' 忌'+sihua.忌]
+    ['四化('+yearGan+'干)', '祿'+sihua.祿+' 權'+sihua.權+' 科'+sihua.科+' 忌'+sihua.忌],
+    ['命主', MINGZHU[yearZhi]||''],
+    ['身主', SHENZHU[yearZhi]||'']
   ];
   info.innerHTML=infoData.map(d=>`<div class="info-item"><div class="k">${d[0]}</div><div class="v">${d[1]}</div></div>`).join('');
 
@@ -638,5 +642,19 @@ function exportChart(){
   });
 }
 document.getElementById('exportBtn').addEventListener('click', exportChart);
+
+// 導航：排盤後顯示 + 錨點平滑滾動 + 返回頂部
+function showNav(){ document.getElementById('stickyNav').style.display='flex'; }
+// 排盤後顯示導航
+const _origRender=render;
+render=function(){ _origRender(); showNav(); };
+document.querySelectorAll('.nav-link').forEach(a=>{
+  a.addEventListener('click', e=>{
+    e.preventDefault();
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t) t.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+});
+document.getElementById('toTopBtn').addEventListener('click', ()=>window.scrollTo({top:0, behavior:'smooth'}));
 
 })();
