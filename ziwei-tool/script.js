@@ -217,6 +217,45 @@ const SI_HUA_DESC={
   '忌':'當年需多留意，防其對應領域的困擾或執著'
 };
 
+/* 15. 公曆→農曆自動填盤（用 lunar.js） */
+const TIME_ZHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+function solarToAll(sy, sm, sd, sh){
+  if(typeof Solar==='undefined'){ alert('農曆庫加載失敗'); return null; }
+  const sol=Solar.fromYmdHms(sy,sm,sd, (sh*2+1)%24>20?23:sh*2, (sh*2+1)%24, 0);
+  const lun=sol.getLunar();
+  const yearGz=lun.getYearInGanZhi();
+  const yearGan=yearGz[0], yearZhi=yearGz[1];
+  const month=lun.getMonth(), day=lun.getDay();
+  // 命宮 + 五行局
+  const ms=mingShenGong(month, sh);
+  const gzMap=palaceGanZhi(yearGan);
+  const mingGZ=gzMap[ms.mingZhi];
+  const wj=wuxingJu(mingGZ);
+  return {yearGan, yearZhi, month, day, hour:sh, ju:wj.ju, juNum:wj.juNum, juName:wj.juName, naYin:wj.naYin, mingZhi:ms.mingZhi, mingGZ};
+}
+function applySolar(){
+  const sy=parseInt(document.getElementById('sy').value,10);
+  const sm=parseInt(document.getElementById('sm').value,10);
+  const sd=parseInt(document.getElementById('sd').value,10);
+  const sh=parseInt(document.getElementById('sh').value,10);
+  if(!sy||!sm||!sd){ alert('請填完整公曆生日'); return; }
+  const r=solarToAll(sy,sm,sd,sh);
+  if(!r) return;
+  // 填入手動欄位
+  document.getElementById('yearGan').value=r.yearGan;
+  document.getElementById('yearZhi').value=r.yearZhi;
+  document.getElementById('month').value=r.month;
+  document.getElementById('day').value=r.day;
+  document.getElementById('hour').value=r.hour;
+  // 五行局：單字(火)+中文數(六) -> 下拉值
+  const CN=['零','一','二','三','四','五','六'];
+  if(r.ju && r.juNum){
+    const juVal=r.ju+CN[r.juNum]+'局';
+    document.getElementById('ju').value=juVal;
+  }
+  render();
+}
+
 /* ---------- 渲染 ---------- */
 function render(){
   const yearGan=document.getElementById('yearGan').value;
@@ -453,6 +492,7 @@ function render(){
 }
 
 document.getElementById('calcBtn').addEventListener('click', render);
+document.getElementById('solarBtn').addEventListener('click', applySolar);
 // 自動推流年：出生年干支 + 虛歲 → 流年干支
 function autoLiunian(){
   const bGan=document.getElementById('yearGan').value;
