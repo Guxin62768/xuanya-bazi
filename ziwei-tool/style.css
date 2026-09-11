@@ -316,3 +316,12 @@ body{
 .luopan-legend{display:flex;flex-direction:column;gap:8px}
 .luopan-legend .lg{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-main)}
 .luopan-legend .lg i{width:14px;height:14px;border-radius:50%;display:inline-block}
+
+/* 多盤對比 */
+.compare-grid{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.cm-item{display:grid;grid-template-columns:1fr 1.5fr 1.5fr;gap:10px;padding:10px 14px;align-items:center}
+.cm-item:nth-child(odd){background:var(--surface)}
+.cm-item span{font-size:13px;color:var(--text-main)}
+.cm-item .cm-key{color:var(--gold);font-weight:700}
+.cm-head{background:var(--surface-hover);font-weight:700}
+.cm-head span{color:var(--gold-l)}
