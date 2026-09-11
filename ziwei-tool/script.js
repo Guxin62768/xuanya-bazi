@@ -627,6 +627,7 @@ function render(){
   document.getElementById('haoPanel').style.display='';
   document.getElementById('luopanPanel').style.display='';
   document.getElementById('yunchengPanel').style.display='';
+  document.getElementById('comparePanel').style.display='';
 
   // 命宮主星斷語
   const mingPalace=order[0];
@@ -1414,5 +1415,42 @@ function initCollapse(){
 initCollapse();
 let _lastMobile=window.innerWidth<=640;
 window.addEventListener('resize', ()=>{ const m=window.innerWidth<=640; if(m!==_lastMobile){ _lastMobile=m; location.reload(); } });
+
+// 多盤對比
+function renderCompare(){
+  const box=document.getElementById('compareResult');
+  const c2y=parseInt(document.getElementById('c2y').value,10);
+  const c2m=parseInt(document.getElementById('c2m').value,10);
+  const c2d=parseInt(document.getElementById('c2d').value,10);
+  const c2h=parseInt(document.getElementById('c2h').value,10);
+  const c2g=document.getElementById('c2g').value;
+  if(!c2y||!c2m||!c2d){ box.innerHTML='<div class="ft-item"><div class="ft-body">請填第二盤完整生日</div></div>'; return; }
+  const b2=solarToAll(c2y,c2m,c2d,c2h);
+  if(!b2){ box.innerHTML='<div class="ft-item"><div class="ft-body">第二盤排盤失敗</div></div>'; return; }
+  const aYg=document.getElementById('yearGan').value;
+  const aYz=document.getElementById('yearZhi').value;
+  const aMonth=parseInt(document.getElementById('month').value,10);
+  const aHour=parseInt(document.getElementById('hour').value,10);
+  const agender=document.getElementById('gender').value;
+  const ams=mingShenGong(aMonth, aHour);
+  const bms=mingShenGong(b2.month, c2h);
+  const CN5=['零','一','二','三','四','五','六'];
+  const bjuName=b2.ju+(b2.juNum?CN5[b2.juNum]+'局':'');
+  const aju=document.getElementById('ju').value;
+  const adx=calcDaxian(aYg, agender, ams.mingZhi, aju);
+  const bdx=calcDaxian(b2.yearGan, c2g, bms.mingZhi, bjuName);
+  const aBazi=window.__bazi?window.__bazi.map(x=>x.gz).join(' '):'';
+  const bBazi=b2.bazi?b2.bazi.map(x=>x.gz).join(' '):'';
+  const rows=[
+    ['年干', aYg+'（'+GAN_WUXING[aYg]+'）', b2.yearGan+'（'+GAN_WUXING[b2.yearGan]+'）'],
+    ['命宮', ams.mingZhi+'宮', bms.mingZhi+'宮'],
+    ['五行局', aju, bjuName],
+    ['八字', aBazi, bBazi],
+    ['命主', MINGZHU[aYz]||'', MINGZHU[b2.yearZhi]||''],
+    ['起運', adx.start+'歲', bdx.start+'歲']
+  ];
+  box.innerHTML='<div class="cm-item cm-head"><span>指標</span><span>第一盤</span><span>第二盤</span></div>'+rows.map(r=>'<div class="cm-item"><span class="cm-key">'+r[0]+'</span><span>'+r[1]+'</span><span>'+r[2]+'</span></div>').join('');
+}
+document.getElementById('compareBtn').addEventListener('click', renderCompare);
 
 })();
