@@ -458,13 +458,15 @@ function render(){
     const starStr=parts.length?parts.join('、'):'（無主星）';
     // 宮位主題 + 主星特質斷語
     const theme=PALACE_THEME[lyPalace.name]||'';
-    const mainStarTrait=lyPalace.stars.map(s=>STAR_KEY[s]).filter(Boolean);
+    const mainStarTrait=lyPalace.stars.filter(s=>STAR_DESC[s]);
     const traitStr=mainStarTrait.length?
-      '· '+lyPalace.stars.filter(s=>STAR_KEY[s]).map(s=>s+STAR_KEY[s]).join('、')
-      :'· 空宮宜兼看對宮';
+      mainStarTrait.map(s=>s+'：'+STAR_DESC[s]).join('；')
+      :'空宮宜兼看對宮';
+    const flowHua=lyPalace.stars.filter(s=>window.__lySihuaMark&&window.__lySihuaMark[s]);
+    const flowStr=flowHua.length?'　流年四化影響：'+flowHua.map(s=>s+'化'+window.__lySihuaMark[s]).join('、')+'':'';
     const el=document.createElement('div');
     el.className='ln-item ln-focus';
-    el.innerHTML=`<span class="ln-label">流年重點</span><span class="ln-val"><em>${lyPalace.name}（${lyPalace.zhi}宮）</em>·${theme}${traitStr}　星曜：${starStr}</span>`;
+    el.innerHTML=`<span class="ln-label">流年重點</span><span class="ln-val"><em>${lyPalace.name}（${lyPalace.zhi}宮）</em>·${theme}<br>${traitStr}${flowStr}</span>`;
     document.getElementById('liunianResult').appendChild(el);
   })();
 
