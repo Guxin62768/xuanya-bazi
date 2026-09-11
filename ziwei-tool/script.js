@@ -586,6 +586,7 @@ function render(){
   renderLucky(yearGan, yearZhi);
   renderFengshui(order, aux);
   renderHealth(order, sihuaMark);
+  renderFlower(yearZhi, aux, gzMap);
 
   // 命宮主星斷語
   const mingPalace=order[0];
@@ -1036,6 +1037,38 @@ function renderHealth(order, sihuaMark){
   H.push('</div></div>');
   H.push('<div class="ft-item"><div class="ft-head">健康方位</div><div class="ft-body">');
   H.push('<div class="ft-line"><span class="ft-key">疾厄宮在'+hp.zhi+'宮</span>養生宜重'+ZHI_FANGWEI[hp.zhi]+'方位之環境</div>');
+  H.push('</div></div>');
+  box.innerHTML=H.join('');
+}
+
+// 桃花·貴人·學業
+const HONGLUAN={子:'辰',丑:'卯',寅:'寅',卯:'丑',辰:'子',巳:'亥',午:'戌',未:'酉',申:'申',酉:'未',戌:'午',亥:'巳'};
+function renderFlower(yearZhi, aux, gzMap){
+  const panel=document.getElementById('flowerPanel');
+  const box=document.getElementById('flowerContent');
+  panel.style.display='';
+  const H=[];
+  // 桃花（紅鸞/天喜同宮）
+  const hl=HONGLUAN[yearZhi];
+  const tx=ZHI[n12(zIdx(hl)+6)];
+  const gw=(gzMap&&gzMap[hl])||'';
+  H.push('<div class="ft-item"><div class="ft-head">桃花位（紅鸞·天喜）</div><div class="ft-body">');
+  H.push('<div class="ft-line"><span class="ft-key">紅鸞在'+hl+'宮（'+gw+'）</span>主正緣、婚淑，命主桃花緣分所在</div>');
+  H.push('<div class="ft-line"><span class="ft-key">天喜在'+tx+'宮</span>主喜慶、姻緣，婚姻吉位</div>');
+  H.push('</div></div>');
+  // 貴人（天魁/天鉞）
+  let kui=null, yue=null;
+  for(const z of ZHI){ if((aux[z]||[]).includes('天魁')) kui=z; if((aux[z]||[]).includes('天鉞')) yue=z; }
+  H.push('<div class="ft-item"><div class="ft-head">貴人位（天魁·天鉞）</div><div class="ft-body">');
+  H.push('<div class="ft-line"><span class="ft-key">天魁'+(kui?'在'+kui+'宮':'')+'</span>陽貴，主男性/白天貴人助力</div>');
+  H.push('<div class="ft-line"><span class="ft-key">天鉞'+(yue?'在'+yue+'宮':'')+'</span>陰貴，主女性/暗夜貴人助力</div>');
+  H.push('</div></div>');
+  // 學業（文昌/文曲）
+  let wc=null, wq=null;
+  for(const z of ZHI){ if((aux[z]||[]).includes('文昌')) wc=z; if((aux[z]||[]).includes('文曲')) wq=z; }
+  H.push('<div class="ft-item"><div class="ft-head">學業位（文昌·文曲）</div><div class="ft-body">');
+  H.push('<div class="ft-line"><span class="ft-key">文昌'+(wc?'在'+wc+'宮':'')+'</span>正途學業、文書、考試之利</div>');
+  H.push('<div class="ft-line"><span class="ft-key">文曲'+(wq?'在'+wq+'宮':'')+'</span>才藝、口才、藝術之緣</div>');
   H.push('</div></div>');
   box.innerHTML=H.join('');
 }
