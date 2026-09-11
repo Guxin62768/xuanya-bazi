@@ -462,6 +462,18 @@ function render(){
   ];
   info.innerHTML=infoData.map(d=>`<div class="info-item"><div class="k">${d[0]}</div><div class="v">${d[1]}</div></div>`).join('');
 
+  // 三方四正（命宮 + 財帛 + 官祿 + 遷移）
+  document.getElementById('sanfangPanel').style.display='';
+  const sfIdx=[0,4,6,8]; // 命/財帛/遷移/官祿 (PALACE_NAMES 逆時針序)
+  const sfLabels={0:'命宮',4:'財帛',6:'遷移',8:'官祿'};
+  const sfHtml=sfIdx.map(i=>{
+    const p=order[i];
+    const sfStars=[...p.stars.map(s=>{let t=s;if(sihuaMark[s])t+='('+sihuaMark[s]+')';return t;}),...p.aux];
+    const starStr=sfStars.length?sfStars.join('、'):'（空宮）';
+    return `<div class="sf-item"><div class="sf-name">${sfLabels[i]}<span class="sf-zhi">${p.zhi}宮</span></div><div class="sf-gz">${p.gz}</div><div class="sf-stars">${starStr}</div></div>`;
+  }).join('');
+  document.getElementById('sanfangGrid').innerHTML=sfHtml;
+
   // 命宮主星斷語
   const mingPalace=order[0];
   const mingStars=mingPalace.stars.filter(s=>STAR_DESC[s]);
