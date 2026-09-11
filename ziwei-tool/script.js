@@ -589,6 +589,7 @@ function render(){
   renderFengshui(order, aux);
   renderHealth(order, sihuaMark);
   renderFlower(yearZhi, aux, gzMap);
+  document.getElementById('hehunPanel').style.display='';
 
   // 命宮主星斷語
   const mingPalace=order[0];
@@ -1096,6 +1097,57 @@ function renderFlower(yearZhi, aux, gzMap){
   H.push('</div></div>');
   box.innerHTML=H.join('');
 }
+
+// 合婚分析
+function renderHehun(){
+  const panel=document.getElementById('hehunPanel');
+  const box=document.getElementById('hehunResult');
+  const birth=window.__birth;
+  if(!birth){ box.innerHTML='<div class="ft-item"><div class="ft-body">請先排好甲方命盤</div></div>'; return; }
+  const hy=parseInt(document.getElementById('hy').value,10);
+  const hm=parseInt(document.getElementById('hm').value,10);
+  const hd=parseInt(document.getElementById('hd').value,10);
+  const hh=parseInt(document.getElementById('hh').value,10);
+  const hg=document.getElementById('hg').value;
+  if(!hy||!hm||!hd){ box.innerHTML='<div class="ft-item"><div class="ft-body">請填乙方完整生日</div></div>'; return; }
+  // 乙方八字
+  const bBazi=solarToAll(hy,hm,hd,hh);
+  if(!bBazi){ box.innerHTML='<div class="ft-item"><div class="ft-body">乙方排盤失敗</div></div>'; return; }
+  // 甲方：當前盤年干 + 夫妻宮
+  const aGan=document.getElementById('yearGan').value;
+  const bGan=bBazi.yearGan;
+  // 五行相生相剋
+  const SHENG={木:'火',火:'土',土:'金',金:'水',水:'木'};
+  const KE={木:'土',土:'水',水:'火',火:'金',金:'木'};
+  const aW=GAN_WUXING[aGan], bW=GAN_WUXING[bGan];
+  let wu;
+  if(aW===bW) wu='同五行，互相扶持但也有競爭';
+  else if(SHENG[aW]===bW) wu='甲五行（'+aW+'）生乙（'+bW+'），甲旺而助乙，相合';
+  else if(SHENG[bW]===aW) wu='乙五行（'+bW+'）生甲（'+aW+'），乙旺而助甲，相合';
+  else if(KE[aW]===bW) wu='甲（'+aW+'）剋乙（'+bW+'），甲較強勢，需磨合';
+  else if(KE[bW]===aW) wu='乙（'+bW+'）剋甲（'+aW+'），乙較強勢，需磨合';
+  // 本命卦相配
+  const aGua=calcMingGua(birth.sy, birth.sg);
+  const bGua=calcMingGua(hy, hg);
+  const east=['坎','震','巽','离'], west=['乾','坤','艮','兑'];
+  const aEast=east.includes(aGua), bEast=east.includes(bGua);
+  const guaOk = (aEast===bEast) ? '同屬'+(aEast?'東四命':'西四命')+'，住宅風向相合' : '一東四一西四命，宅向需各自考量';
+  const H=[];
+  H.push('<div class="ft-item"><div class="ft-head">五行相配</div><div class="ft-body">');
+  H.push('<div class="ft-line"><span class="ft-key">甲</span>年干'+aGan+'屬'+aW+'</div>');
+  H.push('<div class="ft-line"><span class="ft-key">乙</span>年干'+bGan+'屬'+bW+'</div>');
+  H.push('<div class="ft-line">'+wu+'</div>');
+  H.push('</div></div>');
+  H.push('<div class="ft-item"><div class="ft-head">本命卦相配</div><div class="ft-body">');
+  H.push('<div class="ft-line"><span class="ft-key">甲</span>'+aGua+'卦　<span class="ft-key">乙</span>'+bGua+'卦</div>');
+  H.push('<div class="ft-line">'+guaOk+'</div>');
+  H.push('</div></div>');
+  H.push('<div class="ft-item"><div class="ft-head">八字四柱</div><div class="ft-body">');
+  H.push('<div class="ft-line"><span class="ft-key">乙八字</span>'+(bBazi.bazi?bBazi.bazi.map(b=>b.gz).join(' '):'')+'</div>');
+  H.push('</div></div>');
+  box.innerHTML=H.join('');
+}
+document.getElementById('hehunBtn').addEventListener('click', renderHehun);
 
 // 斷語庫渲染
 function initLibrary(){
