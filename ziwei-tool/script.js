@@ -381,7 +381,12 @@ function render(){
   document.getElementById('daxianDesc').textContent=dxDesc;
   document.getElementById('daxianList').innerHTML=dx.res.map(l=>{
     const isCur = currentAge>=l.startAge && currentAge<=l.startAge+9;
-    return `<div class="dx-item${isCur?' dx-cur':''}"><span class="dx-age">${l.startAge}歲</span><span class="dx-name">${l.name} · ${l.zhi}${isCur?'<em class="dx-tag">當運</em>':''}</span><span class="dx-range">${l.startAge}-${l.startAge+9}歲</span></div>`;
+    // 大限四化：用大限宮位天干查四化表
+    const dxGz=gzMap[l.zhi];
+    const dxGan=dxGz?dxGz[0]:'';
+    const dxSihua=dxGan&&SIHUA[dxGan]?SIHUA[dxGan]:null;
+    const dxSihuaStr=dxSihua?`<span class="dx-sihua">${dxSihua.祿}祿 ${dxSihua.權}權 ${dxSihua.科}科 ${dxSihua.忌}忌</span>`:'';
+    return `<div class="dx-item${isCur?' dx-cur':''}"><span class="dx-age">${l.startAge}歲</span><span class="dx-name">${l.name} · ${l.zhi}${isCur?'<em class="dx-tag">當運</em>':''}</span>${dxSihuaStr}<span class="dx-range">${l.startAge}-${l.startAge+9}歲</span></div>`;
   }).join('');
 
   // 流年太歲 + 小限 + 十二神煞
