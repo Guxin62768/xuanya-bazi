@@ -1017,36 +1017,53 @@ function renderFortune(order, sihuaMark, sihua, mingZhi, shenZhi, wj, aux){
   const box=document.getElementById('fortContent');
   panel.style.display='';
   const H=[];
-  // 財帛宮（order[4]）
-  const cp=order[4];
-  const cpStars=cp.stars;
-  const cpAux=cp.aux;
-  // 財帛宮主星財富特質
+  const cp=order[4], cpStars=cp.stars, cpAux=cp.aux||[];
   const fortStars=cpStars.filter(s=>FORTUNE_STAR[s]);
+  // 財帛宮主星財富特質
   H.push('<div class="ft-item"><div class="ft-head">財帛宮（'+cp.zhi+'宮·'+cp.gz+'）</div><div class="ft-body">');
   if(fortStars.length){
-    fortStars.forEach(s=>{ H.push('<div class="ft-line"><span class="ft-key">'+s+(sihuaMark&&sihuaMark[s]?'('+sihuaMark[s]+')':'')+'</span>'+FORTUNE_STAR[s]+'</div>'); });
+    fortStars.forEach(s=>H.push('<div class="ft-line"><span class="ft-key">'+s+(sihuaMark&&sihuaMark[s]?'('+sihuaMark[s]+')':'')+'</span>'+FORTUNE_STAR[s]+'</div>'));
   } else {
-    // 空宮借對宮（財帛對宮=福德）
-    const dui=order[10];
-    const duiFort=dui.stars.filter(s=>FORTUNE_STAR[s]);
+    const dui=(order[10]||{}), duiFort=(dui.stars||[]).filter(s=>FORTUNE_STAR[s]);
     if(duiFort.length) duiFort.forEach(s=>H.push('<div class="ft-line"><span class="ft-key">'+s+'（借對宮）</span>'+FORTUNE_STAR[s]+'</div>'));
     else H.push('<div class="ft-line">財帛宮空宮，財運較需自主經營</div>');
   }
-  // 財帛宮輔星財訊
   if(cpAux.includes('祿存')) H.push('<div class="ft-line"><span class="ft-key">祿存</span>主財祿有儲，宜穩健守財</div>');
-  if(cpAux.includes('擎羊')||cpAux.includes('陀羅')) H.push('<div class="ft-line"><span class="ft-key">擎羊/陀羅</span>財帛波動較大，宜防破耗</div>');
-  // 化祿/化權
-  if(sihuaMark) H.push('<div class="ft-line">四化財訊：'+Object.entries(sihua).filter(([k])=>k==='祿'||k==='權').map(([k,star])=>(k==='祿'?star+'化祿主財旺':'')).filter(Boolean).join('、')+'</div>');
+  if(cpAux.includes('擎羊')||cpAux.includes('陀羅')) H.push('<div class="ft-line"><span class="ft-key">煞星</span>財帛波動較大，宜防破耗</div>');
   H.push('</div></div>');
-  // 大限財帛（找大限在財帛宮的年份）
+  // 財星三方四正（命·財·官）
+  const minStars=order[0].stars, guanStars=(order[8]||{}).stars||[];
+  const sfFort=[].concat(minStars, cpStars, guanStars).filter(s=>FORTUNE_STAR[s]);
+  H.push('<div class="ft-item"><div class="ft-head">財星三方四正（命·財·官）</div><div class="ft-body">');
+  if(sfFort.length) sfFort.forEach(s=>H.push('<div class="ft-line"><span class="ft-key">'+s+'</span>'+FORTUNE_STAR[s]+'</div>'));
+  else H.push('<div class="ft-line">三方四正財星不明顯，財運靠後天經營</div>');
+  H.push('</div></div>');
+  // 四化財訊 + 漏財
+  H.push('<div class="ft-item"><div class="ft-head">四化財訊 · 漏財</div><div class="ft-body">');
+  const lg=cpAux.includes('祿存'), lc=cpAux.filter(s=>['擎羊','陀羅','地空','地劫'].includes(s));
+  const hl=cpStars.includes(sihua.祿), hj=cpStars.includes(sihua.忌);
+  if(lg) H.push('<div class="ft-line"><span class="ft-key">祿存</span>旺：財庫有守，利儲蓄</div>');
+  if(hl) H.push('<div class="ft-line"><span class="ft-key">'+sihua.祿+'化祿</span>旺財，財源得助</div>');
+  if(hj) H.push('<div class="ft-line"><span class="ft-key">'+sihua.忌+'化忌</span>財帛宮化忌，主財務波動、宜守</div>');
+  if(lc.length) H.push('<div class="ft-line"><span class="ft-key">漏財星</span>'+lc.join('、')+'在財帛，防漏財破耗</div>');
+  if(!lg&&!lc.length&&!hl&&!hj) H.push('<div class="ft-line">財帛宮四化平穩，財運中平，宜穩健理財</div>');
+  H.push('</div></div>');
+  // 大限·流年財運
   const dx=window.__chartData?window.__chartData.daxian:null;
-  if(dx){
-    H.push('<div class="ft-item"><div class="ft-head">大限財運</div><div class="ft-body">');
-    const moneyLimit=dx.res[4]; // 財帛宮大限
-    if(moneyLimit) H.push('<div class="ft-line"><span class="ft-key">'+moneyLimit.startAge+'歲起</span>財帛宮大限（'+moneyLimit.startAge+'-'+moneyLimit.startAge+9+'歲）</div>');
-    H.push('</div></div>');
+  H.push('<div class="ft-item"><div class="ft-head">大限 · 流年財運</div><div class="ft-body">');
+  if(dx&&dx.res[4]){
+    const ml=dx.res[4];
+    H.push('<div class="ft-line"><span class="ft-key">'+ml.startAge+'歲</span>財帛大限（'+ml.startAge+'-'+ml.startAge+9+'歲），該限財運走勢看此</div>');
   }
+  const lyGan=document.getElementById('lyGan')?document.getElementById('lyGan').value:'壬';
+  const lyZhi=document.getElementById('lyZhi')?document.getElementById('lyZhi').value:'午';
+  H.push('<div class="ft-line"><span class="ft-key">流年</span>'+lyGan+lyZhi+'年，財帛宮方位宜把握財星化祿之機</div>');
+  H.push('</div></div>');
+  // 守財宜忌
+  H.push('<div class="ft-item"><div class="ft-head">守財宜忌</div><div class="ft-body">');
+  H.push('<div class="ft-line">宜：穩健理財、審慎投資、積穀防饑、分散風險</div>');
+  H.push('<div class="ft-line">忌：投機冒進、過度借貸、財帛外借、貪高風險</div>');
+  H.push('</div></div>');
   box.innerHTML=H.join('');
 }
 
@@ -1055,29 +1072,36 @@ function renderName(yearGan, yearZhi, mingZhi, wj){
   const box=document.getElementById('nameContent');
   panel.style.display='';
   const H=[];
-  H.push('<div class="ft-item"><div class="ft-head">命主 · 身主（本命守護）</div><div class="ft-body">');
-  H.push('<div class="ft-line"><span class="ft-key">命主</span>'+(MINGZHU[yearZhi]||'')+'　主一生氣質方向</div>');
-  H.push('<div class="ft-line"><span class="ft-key">身主</span>'+(SHENZHU[yearZhi]||'')+'　主後天發展重點</div>');
-  H.push('</div></div>');
-  H.push('<div class="ft-item"><div class="ft-head">五行局（取名補缺）</div><div class="ft-body">');
-  H.push('<div class="ft-line"><span class="ft-key">五行局</span>'+wj.juName+'（'+wj.naYin+'）</div>');
-  H.push('</div></div>');
-  // 八字五行喜用（粗算：日干五行 + 各柱五行）
+  const RADICALS={木:'木、禾、艸、竹、林、樹',火:'火、日、灬、光、炷',土:'土、田、山、石、阜',金:'金、釒、玉、刀、酉',水:'氵、冫、雨、水、泉'};
+  const XISHENG={子:'聰穎鼠年生',丑:'勤懇牛年生',寅:'果敢虎年生',卯:'溫和兔年生',辰:'昂揚龍年生',巳:'善變蛇年生',午:'熱忱馬年生',未:'溫厚羊年生',申:'靈活猴年生',酉:'精緻雞年生',戌:'忠誠狗年生',亥:'圓融豬年生'};
   const bazi=window.__bazi;
+  let suggestWu='木';
+  // 八字五行
   if(bazi){
-    H.push('<div class="ft-item"><div class="ft-head">八字五行</div><div class="ft-body">');
     const gzList=bazi.map(b=>b.gz);
     const five={木:0,火:0,土:0,金:0,水:0};
-    gzList.forEach(gz=>{
-      five[GAN_WUXING[gz[0]]]=(five[GAN_WUXING[gz[0]]]||0)+1;
-      five[ZHI_WUXING[gz[1]]]=(five[ZHI_WUXING[gz[1]]]||0)+1;
-    });
+    gzList.forEach(gz=>{ five[GAN_WUXING[gz[0]]]=(five[GAN_WUXING[gz[0]]]||0)+1; five[ZHI_WUXING[gz[1]]]=(five[ZHI_WUXING[gz[1]]]||0)+1; });
+    suggestWu=Object.entries(five).sort((a,b)=>a[1]-b[1])[0][0];
+    H.push('<div class="ft-item"><div class="ft-head">八字五行</div><div class="ft-body">');
     H.push('<div class="ft-line">'+Object.entries(five).map(([k,v])=>k+(v?'×'+v:'×0')).join('　')+'</div>');
-    // 最缺的五行
-    const minFive=Object.entries(five).sort((a,b)=>a[1]-b[1])[0];
-    H.push('<div class="ft-line"><span class="ft-key">建議補</span>'+(minFive[0])+'（八字較缺，取名可補）</div>');
+    H.push('<div class="ft-line"><span class="ft-key">建議補</span>'+suggestWu+'（八字較缺，取名宜補）</div>');
     H.push('</div></div>');
   }
+  H.push('<div class="ft-item"><div class="ft-head">命主 · 身主 · 五行局</div><div class="ft-body">');
+  H.push('<div class="ft-line"><span class="ft-key">命主</span>'+(MINGZHU[yearZhi]||'')+'　身主：'+(SHENZHU[yearZhi]||'')+'</div>');
+  H.push('<div class="ft-line"><span class="ft-key">五行局</span>'+wj.juName+'（'+wj.naYin+'）</div>');
+  H.push('</div></div>');
+  // 推薦補五行偏旁部首
+  H.push('<div class="ft-item"><div class="ft-head">推薦偏旁部首（補'+suggestWu+'）</div><div class="ft-body">');
+  H.push('<div class="ft-line"><span class="ft-key">宜用</span>'+RADICALS[suggestWu]+'等偏旁之字</div>');
+  H.push('<div class="ft-line">例如取其偏旁之字即可（如補木：林、材、松、柏等）</div>');
+  H.push('</div></div>');
+  // 五格結合 + 筆畫 + 生肖喜用
+  H.push('<div class="ft-item"><div class="ft-head">五格 / 筆畫 / 生肖</div><div class="ft-body">');
+  H.push('<div class="ft-line"><span class="ft-key">五格</span>名字筆畫數理宜吉（見上方「起名五格」）</div>');
+  H.push('<div class="ft-line"><span class="ft-key">筆畫</span>宜取吉祥數理之筆畫（人格/總格尤重）</div>');
+  H.push('<div class="ft-line"><span class="ft-key">生肖</span>'+yearZhi+'年（'+XISHENG[yearZhi]||''+'），可選喜用字</div>');
+  H.push('</div></div>');
   box.innerHTML=H.join('');
 }
 
@@ -1262,6 +1286,38 @@ function renderHehun(){
   H.push('<div class="ft-item"><div class="ft-head">八字四柱</div><div class="ft-body">');
   H.push('<div class="ft-line"><span class="ft-key">乙八字</span>'+(bBazi.bazi?bBazi.bazi.map(b=>b.gz).join(' '):'')+'</div>');
   H.push('</div></div>');
+  // 生肖六合六沖
+  const SHX={寅:'虎',卯:'兔',辰:'龍',巳:'蛇',午:'馬',未:'羊',申:'猴',酉:'雞',戌:'狗',亥:'豬',子:'鼠',丑:'牛'};
+  const LIUHE={子:'丑',丑:'子',寅:'亥',亥:'寅',卯:'戌',戌:'卯',辰:'酉',酉:'辰',巳:'申',申:'巳',午:'未',未:'午'};
+  const LIUCHONG={子:'午',午:'子',丑:'未',未:'丑',寅:'申',申:'寅',卯:'酉',酉:'卯',辰:'戌',戌:'辰',巳:'亥',亥:'巳'};
+  const aZhi=document.getElementById('yearZhi')?document.getElementById('yearZhi').value:'';
+  const bZhi=bBazi.yearZhi||'';
+  const aSheng=SHX[aZhi]||'', bSheng=SHX[bZhi]||'';
+  H.push('<div class="ft-item"><div class="ft-head">生肖六合 · 六沖</div><div class="ft-body">');
+  H.push('<div class="ft-line"><span class="ft-key">甲生肖</span>'+aSheng+'年　<span class="ft-key">乙生肖</span>'+bSheng+'年</div>');
+  let shengd='';
+  if(aZhi&&bZhi){
+    if(LIUHE[aZhi]===bZhi) shengd='六合：相合大吉，緣分深厚，利婚姻長久';
+    else if(LIUCHONG[aZhi]===bZhi) shengd='六沖：相沖，雙方性格差異大，需多磨合包容';
+    else shengd='平日：非六合亦非六沖，緣分中等，看相處經營';
+  }
+  H.push('<div class="ft-line">'+shengd+'</div>');
+  H.push('</div></div>');
+  // 夫妻宮對比（甲夫妻宮星曜 vs 乙夫妻宮）
+  H.push('<div class="ft-item"><div class="ft-head">夫妻宮對比</div><div class="ft-body">');
+  H.push('<div class="ft-line">（夫妻宮星曜反映對感情之態度）</div>');
+  H.push('</div></div>');
+  // 婚配評分等級
+  let score=60;
+  if(LIUHE[aZhi]===bZhi) score+=25;
+  if(LIUCHONG[aZhi]===bZhi) score-=15;
+  if(SHENG[aW]===bW||SHENG[bW]===aW) score+=15;
+  if(KE[aW]===bW||KE[bW]===aW) score-=10;
+  if(aEast===bEast) score+=5;
+  const grade=score>=85?'上上婚':score>=75?'上等婚':score>=60?'中等婚':'需磨合';
+  H.push('<div class="ft-item"><div class="ft-head">婚配評分</div><div class="ft-body">');
+  H.push('<div class="ft-line"><span class="ft-key">綜合</span><span style="font-size:24px;color:var(--gold-l);font-weight:700">'+score+'分</span>（'+grade+'）</div>');
+  H.push('</div></div>');
   box.innerHTML=H.join('');
 }
 document.getElementById('hehunBtn').addEventListener('click', renderHehun);
@@ -1314,32 +1370,47 @@ function renderHao(){
   panel.style.display='';
   const num=document.getElementById('haoNum').value.replace(/\D/g,'');
   if(!num){ box.innerHTML='<div class="ft-item"><div class="ft-body">請輸入號碼</div></div>'; return; }
-  // 喜用五行（年干五行）
   const yearGan=document.getElementById('yearGan').value;
   const xiW=GAN_WUXING[yearGan]||'土';
-  // 每位数字五行
-  let score=60;
   const H=[];
-  H.push('<div class="ft-item"><div class="ft-head">號碼 '+num+'</div><div class="ft-body">');
-  // 数字五行分布
   const digits=num.split('');
+  // 逐位五行詳解
+  H.push('<div class="ft-item"><div class="ft-head">號碼逐位五行</div><div class="ft-body">');
+  const perLine=digits.map((d,i)=>d+'='+NUM_WUXING[parseInt(d)]).join('　');
+  H.push('<div class="ft-line">'+perLine+'</div>');
+  H.push('<div class="ft-line">數字五行：1/6水　2/7火　3/8木　4/9金　5/0土</div>');
+  H.push('</div></div>');
+  // 五行分布
   const wCount={木:0,火:0,土:0,金:0,水:0};
   digits.forEach(d=>{ const w=NUM_WUXING[parseInt(d)]; wCount[w]=(wCount[w]||0)+1; });
-  H.push('<div class="ft-line">數字五行：'+Object.entries(wCount).map(([k,v])=>k+v).join('　')+'</div>');
-  // 尾数
+  const mostFive=Object.entries(wCount).sort((a,b)=>b[1]-a[1])[0];
+  H.push('<div class="ft-item"><div class="ft-head">五行結構</div><div class="ft-body">');
+  H.push('<div class="ft-line">'+Object.entries(wCount).map(([k,v])=>k+v).join('　')+'</div>');
+  H.push('<div class="ft-line"><span class="ft-key">多數</span>'+mostFive[0]+'（'+mostFive[1]+'位）</div>');
+  H.push('</div></div>');
+  // 尾號特殊數字吉凶
   const lastW=NUM_WUXING[parseInt(digits[digits.length-1])];
-  H.push('<div class="ft-line"><span class="ft-key">尾數五行</span>'+lastW+'</div>');
-  // 喜用判断
-  if(lastW===xiW){ score+=20; H.push('<div class="ft-line"><span class="ft-key">尾數</span>屬'+lastW+'，與年干'+xiW+'相合，吉！</div>'); }
-  else if(({木:'火',火:'土',土:'金',金:'水',水:'木'})[xiW]===lastW){ score+=12; H.push('<div class="ft-line"><span class="ft-key">尾數</span>屬'+lastW+'，生年干'+xiW+'，相生，吉！</div>'); }
-  else { score-=8; H.push('<div class="ft-line"><span class="ft-key">尾數</span>屬'+lastW+'，與年干'+xiW+'不相生，可斟酌</div>'); }
-  // 数理：数字和
+  H.push('<div class="ft-item"><div class="ft-head">尾號吉凶</div><div class="ft-body">');
+  if(lastW===xiW){ H.push('<div class="ft-line"><span class="ft-key">尾數'+digits[digits.length-1]+'（'+lastW+'）</span>與年干'+xiW+'相合，吉！</div>'); }
+  else if(({木:'火',火:'土',土:'金',金:'水',水:'木'})[xiW]===lastW){ H.push('<div class="ft-line"><span class="ft-key">尾數'+digits[digits.length-1]+'（'+lastW+'）</span>生年干'+xiW+'，相生，吉！</div>'); }
+  else { H.push('<div class="ft-line"><span class="ft-key">尾數'+digits[digits.length-1]+'（'+lastW+'）</span>與年干'+xiW+'不相生，可斟酌</div>'); }
+  // 數理吉凶詳解
   let sum=digits.reduce((a,b)=>a+parseInt(b),0);
   const sheng=(sum%9===0?9:sum%9);
-  H.push('<div class="ft-line"><span class="ft-key">數理</span>數字和'+sum+'（'+(sheng>=5?'數偏吉':'數偏中')+'）</div>');
+  const shuJi=['大吉','吉','中吉','半吉','凶'][sheng>=8?0:sheng>=6?1:sheng>=4?2:sheng>=2?3:4];
+  H.push('<div class="ft-line"><span class="ft-key">數理</span>數字和'+sum+'，數理'+shuJi+'（九星'+sheng+'）</div>');
   H.push('</div></div>');
-  // 综合评分
-  const finalScore=Math.min(99,score);
+  // 分類建議（手機/車牌/門牌）
+  H.push('<div class="ft-item"><div class="ft-head">分類建議</div><div class="ft-body">');
+  H.push('<div class="ft-line"><span class="ft-key">手機</span>宜尾數與年干相合、忌連續4/7（死/氣）</div>');
+  H.push('<div class="ft-line"><span class="ft-key">車牌</span>宜含吉利數理數字，避兇數（0/4連排）</div>');
+  H.push('<div class="ft-line"><span class="ft-key">門牌</span>五行宜與住者相生，避相剋五行</div>');
+  H.push('</div></div>');
+  // 綜合評分
+  let score=60;
+  if(lastW===xiW) score+=20; else if(({木:'火',火:'土',土:'金',金:'水',水:'木'})[xiW]===lastW) score+=12; else score-=8;
+  if(mostFive[0]===xiW) score+=10;
+  const finalScore=Math.min(99,Math.max(20,score));
   const grade=finalScore>=85?'上吉':finalScore>=70?'中吉':finalScore>=60?'中平':'偏凶';
   H.push('<div class="ft-item"><div class="ft-head">綜合評分</div><div class="ft-body">');
   H.push('<div class="ft-line"><span class="ft-key">評分</span><span style="font-size:26px;color:var(--gold-l);font-weight:700">'+finalScore+'分</span>（'+grade+'）</div>');
