@@ -882,8 +882,11 @@ function exportReport(){
   L.push(hr);
   L.push('※ 本報告為文化娛樂參考，命理斷語僅供參考，不構成任何建議。');
   const txt=L.join('\n');
-  // 統一用頁面彈層顯示報告（最可靠，手機/桌面都能看到）
-  showReport(txt, d);
+  // 用頁面彈層顯示報告（手機/桌面都可靠）
+  const ov=document.getElementById('reportOverlay');
+  if(ov){ showReport(txt, d); }
+  // 兜底：若彈層未成功顯示，用 alert 提示（確保有反饋）
+  setTimeout(()=>{ if(ov && ov.style.display!=='flex'){ alert('報告已生成（共'+txt.length+'字）。若未彈出，請在瀏覽器中長按複製或重新整理後再試。'); } }, 200);
 }
 
 // 顯示報告彈層
