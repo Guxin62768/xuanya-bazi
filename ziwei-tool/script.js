@@ -655,7 +655,7 @@ function render(){
   }
 
   // 保存命盤數據，供導出圖片用
-  window.__chartData={order, ms, zz, tf, mingGZ, wj, yearGan, sihuaMark, lyZhi};
+  window.__chartData={order, ms, zz, tf, mingGZ, wj, yearGan, yearZhi, sihuaMark, lyZhi, sihua, shenZhi:ms.shenZhi, daxian:dx};
 }
 
 document.getElementById('calcBtn').addEventListener('click', render);
@@ -836,6 +836,8 @@ document.getElementById('shareBtn').addEventListener('click', shareLink);
 
 // 導出完整命理報告（.txt）
 function exportReport(){
+  try{
+
   const d=window.__chartData;
   if(!d) return;
   const birth=window.__birth;
@@ -851,7 +853,8 @@ function exportReport(){
   L.push('命宮：'+d.mingGZ+'（'+d.mingZhi+'宮）　身宮：'+d.shenZhi+'宮');
   L.push('五行局：'+d.wj.juName+'　紫微在'+d.zz+'宮　天府在'+d.tf+'宮');
   L.push('命主：'+(MINGZHU[d.yearZhi]||'')+'　身主：'+(SHENZHU[d.yearZhi]||''));
-  L.push('四化：祿'+d.sihua.祿+' 權'+d.sihua.權+' 科'+d.sihua.科+' 忌'+d.sihua.忌);
+  const _sh=(d.sihua||{祿:'-',權:'-',科:'-',忌:'-'});
+  L.push('四化：祿'+( _sh.祿||'-')+' 權'+( _sh.權||'-')+' 科'+( _sh.科||'-')+' 忌'+( _sh.忌||'-'));
   L.push(hr);
   L.push('【三方四正】');
   [0,4,6,8].forEach(i=>{
@@ -885,9 +888,23 @@ function exportReport(){
   // 用頁面彈層顯示報告（手機/桌面都可靠）
   const ov=document.getElementById('reportOverlay');
   if(ov){ showReport(txt, d); }
+  // 內聯顯示（必定可見）：直接在命盤面板下方顯示報告
+  const inline=document.getElementById('reportInline');
+  if(inline){
+    inline.style.display='block';
+    inline.innerHTML='<div class="report-inline-head">命理報告（可複製）<button class="report-inline-close" onclick="this.parentNode.parentNode.style.display=\'none\'">✕</button></div><pre class="report-inline-body">'+txt.replace(/</g,'&lt;')+'</pre>';
+  }
   // 兜底：若彈層未成功顯示，用 alert 提示（確保有反饋）
   setTimeout(()=>{ if(ov && ov.style.display!=='flex'){ alert('報告已生成（共'+txt.length+'字）。若未彈出，請在瀏覽器中長按複製或重新整理後再試。'); } }, 200);
+
+  }catch(e){
+    const err=document.getElementById("reportInline");
+    if(err){ err.style.display="block"; err.innerHTML="<div class=report-inline-head>報告出錯</div><pre class=report-inline-body>報告產生時遇到問題："+e.message+"</pre>"; }
+    alert("報告產生失敗："+e.message);
+  }
 }
+window.exportReport=exportReport;
+window.showReport=showReport;
 
 // 顯示報告彈層
 function showReport(txt, d){
