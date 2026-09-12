@@ -655,7 +655,7 @@ function render(){
   }
 
   // 保存命盤數據，供導出圖片用
-  window.__chartData={order, ms, zz, tf, mingGZ, wj, yearGan, yearZhi, sihuaMark, lyZhi, sihua, shenZhi:ms.shenZhi, daxian:dx};
+  window.__chartData={order, ms, zz, tf, mingGZ, wj, yearGan, yearZhi, sihuaMark, lyZhi, sihua, shenZhi:ms.shenZhi, mingZhi:ms.mingZhi, daxian:dx};
 }
 
 document.getElementById('calcBtn').addEventListener('click', render);
