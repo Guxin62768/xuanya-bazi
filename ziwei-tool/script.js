@@ -882,12 +882,31 @@ function exportReport(){
   L.push(hr);
   L.push('※ 本報告為文化娛樂參考，命理斷語僅供參考，不構成任何建議。');
   const txt=L.join('\n');
-  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='ziwei-report-'+d.yearGan+d.zz+'.txt';
-  a.click();
-  URL.revokeObjectURL(a.href);
+  // 統一用頁面彈層顯示報告（最可靠，手機/桌面都能看到）
+  showReport(txt, d);
+}
+
+// 顯示報告彈層
+function showReport(txt, d){
+  const ov=document.getElementById('reportOverlay');
+  const body=document.getElementById('reportBody');
+  ov.style.display='flex';
+  body.textContent=txt;
+  window.__reportTxt=txt;
+  window.__reportD=d;
+  document.getElementById('reportClose').onclick=()=>{ ov.style.display='none'; };
+  document.getElementById('reportCopy').onclick=()=>{
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(()=>alert('已複製報告內容！')).catch(()=>alert('複製失敗')); }
+    else alert('請長按報告內容手動複製');
+  };
+  document.getElementById('reportDl').onclick=()=>{
+    const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='ziwei-report-'+(d?d.yearGan+d.zz:'')+'.txt';
+    document.body.appendChild(a); a.click();
+    setTimeout(()=>{ document.body.removeChild(a); URL.revokeObjectURL(a.href); },100);
+  };
 }
 document.getElementById('reportBtn').addEventListener('click', exportReport);
 
