@@ -169,7 +169,11 @@ function calcLiunian(lyGan, lyZhi, mingZhi, gender, age){
   const xNameArr = gender==='男'?SHUN_NAME:NI_NAME;
   const xZhiRaw = gender==='男'? ZHI[n12(mingIdx-xIdx)] : ZHI[n12(mingIdx+xIdx)];
   const xName=xNameArr[xIdx];
-  return {lyPalace, lyName, lySihua, xZhi:xZhiRaw, xName, xIndex:xIdx};
+  // 十二神煞（從流年支起歲建順行）
+  const SSZ=['歲建','晦氣','喪門','貫索','官符','小耗','大耗','龍德','白虎','天德','弔客','病符'];
+  const ssStart=zIdx(lyZhi);
+  const shensha=SSZ.map((s,i)=>({shen:s, zhi:ZHI[n12(ssStart+i)]}));
+  return {lyPalace, lyName, lySihua, xZhi:xZhiRaw, xName, xIndex:xIdx, shensha};
 }
 
 /* 13. 命宮主星斷語（通用中性，文化參考） */
@@ -881,7 +885,7 @@ function exportReport(){
   L.push('流年太歲：'+lyGan+lyZhi+'年 · '+ln.lyName+'（'+lyZhi+'宮）');
   L.push('流年四化：祿'+ln.lySihua.祿+' 權'+ln.lySihua.權+' 科'+ln.lySihua.科+' 忌'+ln.lySihua.忌);
   L.push('小限：'+age+'歲 → '+ln.xName+'（'+ln.xZhi+'宮）');
-  L.push('十二神煞：'+ln.shensha.map(s=>s.shen+'('+s.zhi+')').join('、'));
+  L.push('十二神煞：'+((ln.shensha||[]).map(s=>s.shen+'('+s.zhi+')')).join('、'));
   L.push(hr);
   L.push('※ 本報告為文化娛樂參考，命理斷語僅供參考，不構成任何建議。');
   const txt=L.join('\n');
