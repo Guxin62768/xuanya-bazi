@@ -425,5 +425,20 @@
 
 <script src="libs/lunar.js"></script>
 <script src="script.js"></script>
+<!-- 報告彈層 -->
+<div class="report-overlay" id="reportOverlay" style="display:none">
+  <div class="report-modal">
+    <div class="report-head">
+      <span>命理報告</span>
+      <button id="reportClose" class="report-close" type="button">✕</button>
+    </div>
+    <pre class="report-body" id="reportBody"></pre>
+    <div class="report-foot">
+      <button id="reportCopy" class="report-btn" type="button">複製內容</button>
+      <button id="reportDl" class="report-btn" type="button">下載 .txt</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
