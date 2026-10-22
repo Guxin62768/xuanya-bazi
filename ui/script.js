@@ -129,6 +129,16 @@
     result.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
-  // 初始自动排一张（1994-08-02 午时）
-  form.dispatchEvent(new Event('submit'));
+  // URL 参数自动排盘（便于分享具体命盘）
+  (function(){
+    var p = new URLSearchParams(location.search);
+    if (p.get('y') && p.get('m') && p.get('d')) {
+      document.getElementById('f-year').value = p.get('y');
+      document.getElementById('f-month').value = p.get('m');
+      document.getElementById('f-day').value = p.get('d');
+      if (p.get('h')) document.getElementById('f-hour').value = p.get('h');
+      if (p.get('g')) document.getElementById('f-gender').value = p.get('g');
+      form.dispatchEvent(new Event('submit', {cancelable:true, bubbles:true}));
+    }
+  })();
 })();
