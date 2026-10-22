@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>紫微斗數排盤</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+
+  <header class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-inner">
+      <p class="eyebrow">ZI WEI DOU SHU</p>
+      <h1>紫微斗數排盤</h1>
+      <p class="sub">輸入生辰，排出十二宮、十四主星與四化飛星</p>
+    </div>
+  </header>
+
+  <section class="panel form-panel">
+    <div class="panel-title">
+      <span class="dot"></span> 生辰輸入
+    </div>
+    <form id="chart-form" autocomplete="off">
+      <div class="field-row">
+        <label class="field">
+          <span class="lbl">出生年（西元）</span>
+          <input type="number" id="f-year" min="1901" max="2049" value="1994" required>
+        </label>
+        <label class="field">
+          <span class="lbl">月</span>
+          <input type="number" id="f-month" min="1" max="12" value="8" required>
+        </label>
+        <label class="field">
+          <span class="lbl">日</span>
+          <input type="number" id="f-day" min="1" max="31" value="2" required>
+        </label>
+      </div>
+      <div class="field-row">
+        <label class="field">
+          <span class="lbl">時辰</span>
+          <select id="f-hour">
+            <option value="0">子時 (23:00–00:59)</option>
+            <option value="1">丑時 (01:00–02:59)</option>
+            <option value="2">寅時 (03:00–04:59)</option>
+            <option value="3">卯時 (05:00–06:59)</option>
+            <option value="4">辰時 (07:00–08:59)</option>
+            <option value="5">巳時 (09:00–10:59)</option>
+            <option value="6">午時 (11:00–12:59)</option>
+            <option value="7">未時 (13:00–14:59)</option>
+            <option value="8">申時 (15:00–16:59)</option>
+            <option value="9">酉時 (17:00–18:59)</option>
+            <option value="10">戌時 (19:00–20:59)</option>
+            <option value="11">亥時 (21:00–22:59)</option>
+          </select>
+        </label>
+        <label class="field">
+          <span class="lbl">性別</span>
+          <select id="f-gender">
+            <option value="male">男</option>
+            <option value="female">女</option>
+          </select>
+        </label>
+      </div>
+      <button type="submit" class="btn-primary">排　盤</button>
+    </form>
+    <p class="hint" id="lunar-hint"></p>
+  </section>
+
+  <section class="panel result-panel" id="result" hidden>
+    <div class="panel-title"><span class="dot"></span> 命盤總覽</div>
+
+    <div class="summary" id="summary"></div>
+
+    <div class="chart-wrap">
+      <div class="chart" id="chart"></div>
+    </div>
+
+    <div class="sihua-box" id="sihua-box"></div>
+  </section>
+
+  <footer class="foot">
+    <p>紫微斗數排盤 · 十二宮 + 十四主星 + 四化</p>
+    <p class="foot-note">資料依輸入生辰即時計算，僅供研究參考</p>
+  </footer>
+
+</div>
+
+<script src="engine.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
