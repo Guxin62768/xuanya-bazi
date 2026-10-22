@@ -80,6 +80,31 @@
     <div class="sihua-box" id="sihua-box"></div>
   </section>
 
+  <section class="panel wealth-panel" id="wealth-panel" hidden>
+    <div class="panel-title"><span class="dot"></span> 财运分析</div>
+    <div class="wealth-head">
+      <div class="wealth-score">
+        <span class="ws-label">财运评级</span>
+        <span class="ws-level" id="wealth-level">—</span>
+      </div>
+      <div class="wealth-tags" id="wealth-tags"></div>
+    </div>
+    <div class="wealth-list" id="wealth-list"></div>
+  </section>
+
+  <section class="panel fate-panel" id="fate-panel" hidden>
+    <div class="panel-title"><span class="dot"></span> 命运 · 大限流年</div>
+    <div class="fate-row">
+      <label class="field small">
+        <span class="lbl">當前虛歲</span>
+        <input type="number" id="f-age" min="1" max="120" placeholder="例如 30">
+      </label>
+      <button type="button" class="btn-mini" id="age-btn">查看流年</button>
+    </div>
+    <div class="fate-current" id="fate-current"></div>
+    <div class="daxian-list" id="daxian-list"></div>
+  </section>
+
   <footer class="foot">
     <p>紫微斗數排盤 · 十二宮 + 十四主星 + 四化</p>
     <p class="foot-note">資料依輸入生辰即時計算，僅供研究參考</p>
@@ -88,6 +113,7 @@
 </div>
 
 <script src="engine.js"></script>
+<script src="analysis.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
