@@ -160,3 +160,32 @@ select{background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),l
   .star{font-size:11.5px;padding:2px 6px}
   .center-name{font-size:22px}
 }
+
+/* ---------- 财运面板 ---------- */
+.wealth-head{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.wealth-score{display:flex;align-items:baseline;gap:10px}
+.ws-label{font-size:12px;color:var(--ink-dim);letter-spacing:.14em}
+.ws-level{font-size:26px;font-weight:700;color:var(--gold-soft);letter-spacing:.16em}
+.wealth-tags{display:flex;gap:8px;flex-wrap:wrap}
+.wtag{font-size:12px;padding:3px 10px;border-radius:99px;background:rgba(217,181,107,.14);border:1px solid rgba(217,181,107,.35);color:var(--gold-soft);letter-spacing:.08em}
+.wealth-list{display:grid;gap:10px}
+.wealth-item{background:rgba(12,16,30,.6);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.wealth-item .wi-k{font-size:13px;color:var(--gold);letter-spacing:.1em;margin-bottom:4px}
+.wealth-item .wi-v{font-size:14px;color:var(--ink);line-height:1.7}
+
+/* ---------- 命运面板 ---------- */
+.fate-row{display:flex;gap:12px;align-items:flex-end;margin-bottom:16px;flex-wrap:wrap}
+.field.small{flex:0 0 140px}
+.btn-mini{padding:11px 20px;border:none;border-radius:10px;cursor:pointer;font-family:inherit;font-size:14px;letter-spacing:.14em;color:#1a1305;background:linear-gradient(180deg,#f0d9a0,#d9b56b 60%,#b8933f);font-weight:600}
+.btn-mini:hover{filter:brightness(1.08)}
+.fate-current{margin-bottom:16px}
+.fc-line{font-size:14px;color:var(--ink);line-height:1.9}
+.fc-line b{color:var(--gold-soft);font-weight:600}
+.fc-hint{font-size:13px;color:var(--ink-dim)}
+.daxian-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:9px}
+.daxian-item{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:rgba(12,16,30,.6);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px}
+.daxian-item.current{border-color:rgba(217,181,107,.7);background:rgba(217,181,107,.12);box-shadow:0 0 18px -6px rgba(217,181,107,.6)}
+.dx-idx{color:var(--ink-dim);font-size:11px;letter-spacing:.1em;width:100%}
+.dx-name{color:var(--gold-soft);font-weight:600;letter-spacing:.08em}
+.dx-zhi{color:var(--ink-dim)}
+.dx-age{color:var(--ink-dim);font-size:12px;margin-left:auto}
