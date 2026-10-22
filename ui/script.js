@@ -107,6 +107,50 @@
       '</div>';
   }
 
+
+  // ---------- 财运 ----------
+  function renderWealth(c) {
+    var A = window.ZiweiAnalysis;
+    if (!A) return;
+    var w = A.wealthOf(c);
+    document.getElementById('wealth-level').textContent = w.level || '—';
+    document.getElementById('wealth-tags').innerHTML = (w.tags || []).map(function (t) {
+      return '<span class="wtag">' + t + '</span>';
+    }).join('');
+    document.getElementById('wealth-list').innerHTML = w.items.map(function (it) {
+      return '<div class="wealth-item"><div class="wi-k">' + it.k + '</div><div class="wi-v">' + it.v + '</div></div>';
+    }).join('');
+    document.getElementById('wealth-panel').hidden = false;
+  }
+
+  // ---------- 命运 ----------
+  var _lastChart = null;
+  function renderFate(c, age) {
+    var A = window.ZiweiAnalysis;
+    if (!A) return;
+    _lastChart = c;
+    var f = A.fateOf(c, age);
+    // 大限列表
+    document.getElementById('daxian-list').innerHTML = f.daxian.map(function (d) {
+      return '<div class="daxian-item' + (d.isCurrent ? ' current' : '') + '">' +
+        '<span class="dx-idx">第 ' + d.idx + ' 限</span>' +
+        '<span class="dx-name">' + d.name + '</span>' +
+        '<span class="dx-zhi">' + d.zhi + '</span>' +
+        '<span class="dx-age">' + d.start + '–' + d.end + ' 歲</span>' +
+      '</div>';
+    }).join('');
+    // 当前流年
+    var box = document.getElementById('fate-current');
+    if (age && f.current && f.liunian) {
+      box.innerHTML =
+        '<div class="fc-line"><b>當前 ' + age + ' 虛歲</b>：行第 ' + f.current.idx + ' 限（' + f.current.name + '宮 · ' + f.current.start + '–' + f.current.end + ' 歲）</div>' +
+        '<div class="fc-line">流年 <b>' + f.liunian.gan + f.liunian.zhi + '</b> 年，落在 <b>' + f.liunian.palace + '宮</b></div>';
+    } else {
+      box.innerHTML = '<div class="fc-hint">輸入虛歲可查看當前大限與流年</div>';
+    }
+    document.getElementById('fate-panel').hidden = false;
+  }
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var y = parseInt(document.getElementById('f-year').value, 10);
@@ -125,8 +169,17 @@
     renderSummary(chart);
     renderChart(chart);
     renderSihua(chart);
+    renderWealth(chart);
+    var ageVal = parseInt(document.getElementById('f-age').value, 10) || 0;
+    renderFate(chart, ageVal);
     result.hidden = false;
     result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  document.getElementById('age-btn').addEventListener('click', function () {
+    if (!_lastChart) return;
+    var ageVal = parseInt(document.getElementById('f-age').value, 10) || 0;
+    renderFate(_lastChart, ageVal);
   });
 
   // URL 参数自动排盘（便于分享具体命盘）
